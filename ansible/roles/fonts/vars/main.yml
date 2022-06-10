@@ -1,0 +1,5 @@
+---
+hackgen_url: https://github.com/yuru7/HackGen/releases/download/v2.5.2/HackGenNerd_v2.5.2.zip
+zip_path: /tmp/hackgen.zip
+unzip_path: ~/hackgen
+font_path: ~/Library/Fonts/

@@ -1,0 +1,11 @@
+---
+
+- name: brew cask install
+  homebrew_cask:
+    package: "{{ item }}"
+  loop: "{{ cask_packages }}"
+
+- name: brew install
+  homebrew:
+    package: "{{ item }}"
+  loop: "{{ brew_packages }}"

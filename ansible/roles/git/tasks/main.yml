@@ -1,0 +1,6 @@
+---
+- name: place .gitconfig
+  copy:
+    src: .gitconfig
+    dest: ~/.gitconfig
+    mode: 0644

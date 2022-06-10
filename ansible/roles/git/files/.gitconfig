@@ -1,0 +1,14 @@
+[user]
+        name = wim-web
+        email = 45655999+wim-web@users.noreply.github.com
+[core]
+        quotepath = false
+        editor = vi
+[ghq]
+        root = ~/ghq/other
+
+[ghq "https://github.com/wim-web"]
+        root = ~/ghq/wim
+
+[ghq "ssh://git@github.com/wim-web"]
+        root = ~/ghq/wim

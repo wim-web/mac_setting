@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+  roles:
+    - name: homebrew
+      tags: homebrew
+    - name: fonts
+      tags: fonts
+    - name: git
+      tags: git
