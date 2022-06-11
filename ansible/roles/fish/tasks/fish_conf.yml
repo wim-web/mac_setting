@@ -1,0 +1,30 @@
+---
+- name: Create a directory if it does not exist
+  file:
+    path: ~/.config/fish/functions
+    state: directory
+    recurse: true
+
+- name: Create a directory if it does not exist
+  file:
+    path: ~/.config/fish/conf.d
+    state: directory
+    recurse: true
+
+- name: ln -s conf.d
+  file:
+    src: "{{ item }}"
+    dest: "~/.config/fish/conf.d/{{ item | basename }}"
+    mode: 0640
+    state: link
+  with_fileglob:
+    - conf.d/**
+
+- name: place functions
+  file:
+    src: "{{ item }}"
+    dest: "~/.config/fish/functions/{{ item | basename }}"
+    mode: 0640
+    state: link
+  with_fileglob:
+    - functions/**

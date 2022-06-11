@@ -1,0 +1,10 @@
+---
+- name: install fish
+  homebrew:
+    name: fish
+
+- name: set config
+  include_tasks: fish_conf.yml
+
+- name: fisher
+  include_tasks: fisher.yml

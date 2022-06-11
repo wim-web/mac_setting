@@ -9,3 +9,5 @@
       tags: fonts
     - name: git
       tags: git
+    - name: fish
+      tags: fish

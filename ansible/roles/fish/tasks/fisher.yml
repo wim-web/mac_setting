@@ -1,0 +1,10 @@
+---
+- name: install
+  shell: curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
+  args:
+    executable: fish
+
+- name: install theme
+  shell: fisher install oh-my-fish/theme-bobthefish
+  args:
+    executable: fish
