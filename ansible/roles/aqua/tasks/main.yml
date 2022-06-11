@@ -20,6 +20,6 @@
     executable: fish
 
 - name: set path
-  shell: fish_add_path ~/.local/share/aquaproj-aqua/bin
+  shell: "fish_add_path ~/.local/share/aquaproj-aqua/bin || :"
   args:
     executable: fish
