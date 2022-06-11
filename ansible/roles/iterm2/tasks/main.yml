@@ -5,9 +5,3 @@
     state: directory
     recurse: true
     mode: 0755
-
-- name: ln -s
-  file:
-    src: "{{ lookup('fileglob', 'config/com.googlecode.iterm2.plist') }}"
-    dest: "~/.config/iterm2_config/com.googlecode.iterm2.plist"
-    state: link
