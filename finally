@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+echo $(which fish) | sudo tee /etc/shells
+chsh -s $(which fish)
+
+fish -c "fish_add_path /opt/homebrew/bin"
+fish -c "fish_add_path ~/.asdf/shims"
+fish -c "fish_add_path ~/.local/bin"
