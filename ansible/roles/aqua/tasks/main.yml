@@ -1,0 +1,25 @@
+---
+- name: Create a directory if it does not exist
+  file:
+    path: ~/.config/aquaproj-aqua
+    state: directory
+    recurse: true
+
+- name: ln -s
+  file:
+    src: "{{ item }}"
+    dest: "~/.config/aquaproj-aqua/{{ item | basename }}"
+    mode: 0640
+    state: link
+  with_fileglob:
+    - ./**
+
+- name: AQUA_GLOBAL_CONFIG
+  shell: set -Ux AQUA_GLOBAL_CONFIG ~/.config/aquaproj-aqua/aqua.yml
+  args:
+    executable: fish
+
+- name: set path
+  shell: fish_add_path ~/.local/share/aquaproj-aqua/bin
+  args:
+    executable: fish
