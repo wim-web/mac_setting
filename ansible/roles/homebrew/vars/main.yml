@@ -1,5 +1,4 @@
 ---
-
 brew_packages:
   - aquaproj/aqua/aqua
 
@@ -19,3 +18,4 @@ cask_packages:
   - hyperswitch
   - google-drive-file-stream
   - keyboardcleantool
+  - appcleaner
