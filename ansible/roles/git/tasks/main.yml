@@ -1,6 +1,24 @@
 ---
-- name: place .gitconfig
-  copy:
-    src: .gitconfig
+- name: ln -s .gitconfig
+  file:
+    src: "{{ lookup('fileglob', '.gitconfig') }}"
     dest: ~/.gitconfig
-    mode: 0644
+    mode: 0640
+    state: link
+
+- name: create ssh config if not exist
+  file:
+    path: ~/.ssh/config
+    mode: 0600
+    state: touch
+
+- name: ssh config
+  lineinfile:
+    path: ~/.ssh/config
+    state: present
+    line: |
+      Host github.com
+          HostName github.com
+          IdentityFile ~/.ssh/github
+          User git
+  when: lookup("file", "~/.ssh/config") | regex_search("Host github.com") == none

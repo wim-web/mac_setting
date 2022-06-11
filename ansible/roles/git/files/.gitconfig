@@ -5,10 +5,4 @@
         quotepath = false
         editor = vi
 [ghq]
-        root = ~/ghq/other
-
-[ghq "https://github.com/wim-web"]
-        root = ~/ghq/wim
-
-[ghq "ssh://git@github.com/wim-web"]
-        root = ~/ghq/wim
+        root = ~/ghq
