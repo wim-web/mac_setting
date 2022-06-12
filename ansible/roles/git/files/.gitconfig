@@ -5,4 +5,4 @@
         quotepath = false
         editor = vi
 [ghq]
-        root = ~/ghq
+        root = ~/program/ghq
