@@ -6,3 +6,5 @@ registries:
 packages:
   - name: x-motemen/ghq@v1.3.0
   - name: peco/peco@v0.5.10
+  - name: stedolan/jq@jq-1.6
+  - name: lima-vm/lima@v0.11.0
