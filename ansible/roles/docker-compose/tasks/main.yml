@@ -1,0 +1,12 @@
+---
+- name: mkdir
+  file:
+    path: ~/.docker/cli-plugins
+    state: directory
+    recurse: true
+
+- name: get docker compose
+  get_url:
+    dest: ~/.docker/cli-plugins/docker-compose
+    url: https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-darwin-aarch64
+    mode: "0700"

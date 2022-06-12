@@ -15,3 +15,5 @@
       tags: aqua
     - name: iterm2
       tags: iterm2
+    - name: docker-compose
+      tags: docker-compose
