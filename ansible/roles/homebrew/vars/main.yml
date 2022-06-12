@@ -1,6 +1,8 @@
 ---
 brew_packages:
   - aquaproj/aqua/aqua
+  - qemu
+  - docker
 
 cask_packages:
   - google-chrome
