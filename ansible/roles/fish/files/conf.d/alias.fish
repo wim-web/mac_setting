@@ -1,12 +1,12 @@
 ## docker
 alias d='docker'
-alias dc='docker-compose'
-alias dce='docker-compose exec'
-alias dcs='docker-compose stop'
-alias dcd='docker-compose down'
-alias dcu='docker-compose up -d'
-alias dcb='docker-compose build'
-alias dcp='docker-compose ps'
+alias dc='docker compose'
+alias dce='docker compose exec'
+alias dcs='docker compose stop'
+alias dcd='docker compose down'
+alias dcu='docker compose up -d'
+alias dcb='docker compose build'
+alias dcp='docker compose ps'
 
 ## git
 alias g='git'
