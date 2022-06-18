@@ -3,11 +3,8 @@
 script_dir=$(cd $(dirname $0); pwd)
 
 function fish_install() {
-    sudo apt-get update
-    sudo apt-get -y install --no-install-recommends fish
-
-    fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && echo jorgebucaran/fisher | fisher install"
-    fish -c "echo oh-my-fish/theme-bobthefish | fisher install "
+    curl -sL https://raw.githubusercontent.com/microsoft/vscode-dev-containers/main/script-library/fish-debian.sh | sudo bash
+    fish -c 'echo oh-my-fish/theme-bobthefish | fisher install'
 }
 
 function fish_config() {
