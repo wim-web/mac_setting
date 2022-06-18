@@ -2,7 +2,7 @@
 # https://aquaproj.github.io/
 registries:
   - type: standard
-    ref: v2.26.0 # renovate: depName=aquaproj/aqua-registry
+    ref: v2.27.1 # renovate: depName=aquaproj/aqua-registry
 packages:
   - name: x-motemen/ghq@v1.3.0
   - name: peco/peco@v0.5.10
