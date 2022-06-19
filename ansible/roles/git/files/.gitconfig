@@ -3,6 +3,6 @@
         email = 45655999+wim-web@users.noreply.github.com
 [core]
         quotepath = false
-        editor = vi
+        editor = vim
 [ghq]
         root = ~/program/ghq
