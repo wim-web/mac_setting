@@ -29,6 +29,7 @@ disk: "100Gib"
 mounts:
   - location: "~/program"
     writable: true
+  - location: "~/.ssh"
   - location: "/tmp/lima"
     writable: true
 # containerd is managed by Docker, not by Lima, so the values are set to false here.
