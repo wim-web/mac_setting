@@ -1,5 +1,6 @@
 {
   "extends": [
+    "config:base",
     "github>aquaproj/aqua-renovate-config:file#1.1.0(ansible/roles/aqua/files/aqua.yml)"
   ]
 }
