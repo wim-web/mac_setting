@@ -1,6 +1,20 @@
 {
   "extends": [
     "config:base",
+    ":prHourlyLimit4",
     "github>aquaproj/aqua-renovate-config:file#1.1.0(ansible/roles/aqua/files/aqua.yml)"
+  ],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "^Dockerfile$"
+      ],
+      "matchStrings": [
+        "zenn-cli@(?<currentValue>.*)"
+      ],
+      "depNameTemplate": "zenn-cli",
+      "datasourceTemplate": "npm"
+    }
   ]
 }
