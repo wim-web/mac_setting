@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-PYTHON_VERSION="3.10.3"
+PYTHON_VERSION="v3.10.5"
 ANSIBLE_VERSION="5.9.0"
 
 if [ "$INITIALIZE" != "true" ] ; then
