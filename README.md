@@ -16,6 +16,15 @@ INITIALIZE=true ./initialize
 ./ansible/local
 ```
 
+### update
+
+https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html
+
+```sh
+python3 -m pip install --upgrade --user ansible
+asdf reshim
+```
+
 ## finally
 
 fishへの初期設定など
