@@ -35,7 +35,8 @@
         "sudo bash -s -- -v v(?<currentValue>.*) -i /usr/bin/aqua"
       ],
       "depNameTemplate": "aquaproj/aqua",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
     }
   ]
 }
