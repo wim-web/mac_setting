@@ -2,8 +2,8 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>wim-web/renovate-config",
-    "github>aquaproj/aqua-renovate-config:file#1.1.0(ansible/roles/aqua/files/aqua.yml)",
-    "github>aquaproj/aqua-renovate-config:installer-script#1.1.0(install.sh)"
+    "github>aquaproj/aqua-renovate-config:file#1.2.2(ansible/roles/aqua/files/aqua.yml)",
+    "github>aquaproj/aqua-renovate-config:installer-script#1.2.2(install.sh)"
   ],
   "regexManagers": [
     {
