@@ -6,3 +6,5 @@
         editor = vim
 [ghq]
         root = ~/program/ghq
+[init]
+        defaultBranch = main
