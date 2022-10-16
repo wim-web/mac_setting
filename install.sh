@@ -20,7 +20,7 @@ function git_config() {
 }
 
 function aqua_install() {
-    curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v1.1.2/aqua-installer | sudo bash -s -- -v v1.19.5 -i /usr/bin/aqua
+    curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v1.1.2/aqua-installer | sudo bash -s -- -v v1.20.2 -i /usr/bin/aqua
     mkdir -p ~/.local/share/aquaproj-aqua/bin
     fish -c 'fish_add_path ~/.local/share/aquaproj-aqua/bin'
 }
