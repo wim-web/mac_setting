@@ -26,6 +26,8 @@ cpus: 4
 memory: "8Gib"
 disk: "100Gib"
 
+arch: "x86_64"
+
 mountType: 9p
 mounts:
   - location: "~/program"
