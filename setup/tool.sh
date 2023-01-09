@@ -20,7 +20,7 @@ declare -a brew_packages=(
 # DOCKER_VERSION=20.10.22
     "docker"
 # renovate: datasource=github-releases depName=twpayne/chezmoi
-# CHEZMOI_VERSION=2.29.0
+# CHEZMOI_VERSION=2.29.1
     "chezmoi"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
