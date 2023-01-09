@@ -17,10 +17,10 @@ declare -a brew_packages=(
 # QEMU_VERSION=7.1.0
     "qemu"
 # renovate: datasource=github-tags depName=docker/cli
-# QEMU_VERSION=20.10.17
+# DOCKER_VERSION=20.10.17
     "docker"
 # renovate: datasource=github-releases depName=twpayne/chezmoi
-# QEMU_VERSION=2.29.0
+# CHEZMOI_VERSION=2.29.0
     "chezmoi"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
