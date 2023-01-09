@@ -6,7 +6,7 @@ if type aqua >/dev/null; then
     echo "aqua already installed"
 else
     echo "> aqua install"
-    curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v2.0.2/aqua-installer | bash -s -- -v v1.30.0
+    curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v2.0.2/aqua-installer | bash -s -- -v v1.30.3
     fish -c "set -Ux AQUA_GLOBAL_CONFIG ~/.config/aquaproj-aqua/aqua.yml"
     fish -c "fish_add_path ~/.local/share/aquaproj-aqua/bin || :"
 fi
