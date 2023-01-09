@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-CURRENT_DIR=$(cd $(dirname "$0") && pwd)
-
-ansible-playbook -i $CURRENT_DIR/hosts/local.yml $CURRENT_DIR/local_setup.yml
