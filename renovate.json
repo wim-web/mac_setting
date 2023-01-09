@@ -8,27 +8,6 @@
   "regexManagers": [
     {
       "fileMatch": [
-        "^initialize$"
-      ],
-      "matchStrings": [
-        "PYTHON_VERSION=\"(?<currentValue>.*)\""
-      ],
-      "depNameTemplate": "python/cpython",
-      "datasourceTemplate": "github-tags",
-      "extractVersionTemplate": "^v(?<version>.*)$"
-    },
-    {
-      "fileMatch": [
-        "^initialize$"
-      ],
-      "matchStrings": [
-        "ANSIBLE_VERSION=\"(?<currentValue>.*)\""
-      ],
-      "depNameTemplate": "ansible",
-      "datasourceTemplate": "pypi"
-    },
-    {
-      "fileMatch": [
         "^install.sh$"
       ],
       "matchStrings": [
