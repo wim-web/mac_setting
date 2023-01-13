@@ -14,7 +14,7 @@ fi
 # brew
 declare -a brew_packages=(
 # renovate: datasource=github-tags depName=qemu/qemu
-# QEMU_VERSION=7.1.0
+# QEMU_VERSION=7.2.0
     "qemu"
 # renovate: datasource=github-tags depName=docker/cli
 # DOCKER_VERSION=20.10.22
