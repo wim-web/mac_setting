@@ -3,8 +3,8 @@
 ## Setup
 
 ```
-./setup/base.sh
-./setup/tool.sh
+./script/setup/base.sh
+./script/setup/tool.sh
 ```
 
 ## dotfiles
