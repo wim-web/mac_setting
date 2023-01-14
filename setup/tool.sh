@@ -70,7 +70,7 @@ done
 
 # docker compose
 # renovate: datasource=github-releases depName=docker/compose
-DOCKER_COMPOSE_VERSION=2.15.0
+DOCKER_COMPOSE_VERSION=2.15.1
 docker_compose_dir="$HOME/.docker/cli-plugins"
 docker_compose_name="docker-compose"
 
