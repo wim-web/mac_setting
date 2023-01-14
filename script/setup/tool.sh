@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
 # aqua
 if type aqua >/dev/null; then
     echo "aqua already installed"
@@ -69,14 +71,4 @@ for package in "${brew_cask_packages[@]}"; do
 done
 
 # docker compose
-# renovate: datasource=github-releases depName=docker/compose
-DOCKER_COMPOSE_VERSION=2.15.0
-docker_compose_dir="$HOME/.docker/cli-plugins"
-docker_compose_name="docker-compose"
-
-if [ -e "$docker_compose_dir/$docker_compose_name" ]; then
-    echo "already installed docker-compose"
-else
-    mkdir -p "$docker_compose_dir"
-    curl -sLo "$docker_compose_dir/$docker_compose_name" https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-darwin-aarch64
-fi
+$CURRENT_DIR/../installer/docker-compose.sh
