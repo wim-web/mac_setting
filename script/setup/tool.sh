@@ -24,6 +24,9 @@ declare -a brew_packages=(
 # renovate: datasource=github-releases depName=twpayne/chezmoi
 # CHEZMOI_VERSION=2.29.1
     "chezmoi"
+# renovate: datasource=github-tags depName=git/git
+# CHEZMOI_VERSION=2.39.1
+    "git"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
 
