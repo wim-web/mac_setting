@@ -22,7 +22,7 @@ declare -a brew_packages=(
 # DOCKER_VERSION=20.10.22
     "docker"
 # renovate: datasource=github-releases depName=twpayne/chezmoi
-# CHEZMOI_VERSION=2.29.1
+# CHEZMOI_VERSION=2.30.0
     "chezmoi"
 # renovate: datasource=github-tags depName=git/git
 # CHEZMOI_VERSION=2.39.1
