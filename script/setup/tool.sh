@@ -19,7 +19,7 @@ declare -a brew_packages=(
 # QEMU_VERSION=7.2.0
     "qemu"
 # renovate: datasource=github-tags depName=docker/cli
-# DOCKER_VERSION=20.10.22
+# DOCKER_VERSION=23.0.1
     "docker"
 # renovate: datasource=github-releases depName=twpayne/chezmoi
 # CHEZMOI_VERSION=2.30.0
