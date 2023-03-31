@@ -18,9 +18,6 @@ declare -a brew_packages=(
 # renovate: datasource=github-tags depName=qemu/qemu
 # QEMU_VERSION=7.2.0
     "qemu"
-# renovate: datasource=github-tags depName=docker/cli
-# DOCKER_VERSION=23.0.1
-    "docker"
 # renovate: datasource=github-releases depName=twpayne/chezmoi
 # CHEZMOI_VERSION=2.30.0
     "chezmoi"
@@ -59,6 +56,7 @@ declare -a brew_cask_packages=(
   "keyboardcleantool"
   "appcleaner"
   "lunar"
+  "docker"
 )
 declare -r installed_brew_cask_packages="$(brew list -1 --casks)"
 
