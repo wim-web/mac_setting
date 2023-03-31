@@ -16,13 +16,13 @@ fi
 # brew
 declare -a brew_packages=(
 # renovate: datasource=github-tags depName=qemu/qemu
-# QEMU_VERSION=7.2.0
+# VERSION=7.2.0
     "qemu"
 # renovate: datasource=github-releases depName=twpayne/chezmoi
-# CHEZMOI_VERSION=2.33.0
+# VERSION=2.33.0
     "chezmoi"
 # renovate: datasource=github-tags depName=git/git
-# CHEZMOI_VERSION=2.40.0
+# VERSION=2.40.0
     "git"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
