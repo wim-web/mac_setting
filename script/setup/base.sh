@@ -11,7 +11,7 @@ fi
 
 # fish shell
 # renovate: datasource=github-tags depName=fish-shell/fish-shell
-# FISH_VERSION=3.6.0
+# FISH_VERSION=3.6.1
 if brew list | grep fish >/dev/null; then
     echo "Already installed fish"
 else
