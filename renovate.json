@@ -3,7 +3,8 @@
   "extends": [
     "local>wim-web/renovate-config",
     "github>aquaproj/aqua-renovate-config:installer-script#1.6.0(setup/tool.sh)",
-    "github>aquaproj/aqua-renovate-config:installer-script#1.6.0(install.sh)"
+    "github>aquaproj/aqua-renovate-config:installer-script#1.6.0(install.sh)",
+    "github>aquaproj/aqua-renovate-config:installer-script#1.6.0(update/aqua.sh)"
   ],
   "regexManagers": [
     {
