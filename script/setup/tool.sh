@@ -19,7 +19,7 @@ declare -a brew_packages=(
 # VERSION=8.0.0
     "qemu"
 # renovate: datasource=github-releases depName=twpayne/chezmoi
-# VERSION=2.33.0
+# VERSION=2.33.6
     "chezmoi"
 # renovate: datasource=github-tags depName=git/git
 # VERSION=2.40.1
