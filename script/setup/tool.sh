@@ -16,7 +16,7 @@ fi
 # brew
 declare -a brew_packages=(
 # renovate: datasource=github-tags depName=qemu/qemu
-# VERSION=7.2.0
+# VERSION=7.2.2
     "qemu"
 # renovate: datasource=github-releases depName=twpayne/chezmoi
 # VERSION=2.33.0
