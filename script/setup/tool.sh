@@ -51,8 +51,8 @@ declare -a brew_cask_packages=(
   "visual-studio-code"
   "google-japanese-ime"
   "1password"
-  "hyperswitch"
-  "google-drive-file-stream"
+#   "hyperswitch" # brewから消えたので手動でインストールする
+  "google-drive"
   "keyboardcleantool"
   "appcleaner"
   "lunar"
