@@ -24,6 +24,9 @@ declare -a brew_packages=(
 # renovate: datasource=github-tags depName=git/git
 # VERSION=2.41.0
     "git"
+# renovate: datasource=github-tags depName=aws/aws-cli
+# VERSION=2.12.1
+    "awscli"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
 
@@ -57,7 +60,18 @@ declare -a brew_cask_packages=(
   "appcleaner"
   "lunar"
   "docker"
+  "zoom"
+  "git-credential-manager-core"
 )
+
+declare -r brew_taps="$(brew tap)"
+
+if echo "$brew_taps" | grep -qx "microsoft/git"; then
+        :
+    else
+        brew tap microsoft/git # for git-credential-manager-core
+fi
+
 declare -r installed_brew_cask_packages="$(brew list -1 --casks)"
 
 for package in "${brew_cask_packages[@]}"; do
