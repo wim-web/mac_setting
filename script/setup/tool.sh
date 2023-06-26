@@ -27,6 +27,8 @@ declare -a brew_packages=(
 # renovate: datasource=github-tags depName=aws/aws-cli
 # VERSION=2.12.1
     "awscli"
+    
+    "bluesnooze"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
 
