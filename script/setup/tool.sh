@@ -9,7 +9,7 @@ if type aqua >/dev/null; then
 else
     echo "> aqua install"
     curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v2.1.1/aqua-installer | bash -s -- -v v2.8.0
-    fish -c "set -Ux AQUA_GLOBAL_CONFIG ~/.config/aquaproj-aqua/aqua.yml"
+    fish -c "set -Ux AQUA_GLOBAL_CONFIG ~/.config/aquaproj-aqua/aqua.yaml"
     fish -c "fish_add_path ~/.local/share/aquaproj-aqua/bin || :"
 fi
 
