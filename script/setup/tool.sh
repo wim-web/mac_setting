@@ -25,7 +25,7 @@ declare -a brew_packages=(
 # VERSION=2.41.0
     "git"
 # renovate: datasource=github-tags depName=aws/aws-cli
-# VERSION=2.13.0
+# VERSION=2.13.3
     "awscli"
     
     "bluesnooze"
