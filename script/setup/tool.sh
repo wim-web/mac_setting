@@ -63,7 +63,7 @@ declare -a brew_cask_packages=(
   "lunar"
   "docker"
   "zoom"
-  "git-credential-manager-core"
+  "git-credential-manager"
 )
 
 declare -r brew_taps="$(brew tap)"
@@ -71,7 +71,7 @@ declare -r brew_taps="$(brew tap)"
 if echo "$brew_taps" | grep -qx "microsoft/git"; then
         :
     else
-        brew tap microsoft/git # for git-credential-manager-core
+        brew tap microsoft/git # for git-credential-manager
 fi
 
 declare -r installed_brew_cask_packages="$(brew list -1 --casks)"
