@@ -64,6 +64,7 @@ declare -a brew_cask_packages=(
   "docker"
   "zoom"
   "git-credential-manager"
+  "warp"
 )
 
 declare -r brew_taps="$(brew tap)"
