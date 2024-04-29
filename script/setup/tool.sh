@@ -60,11 +60,9 @@ declare -a brew_cask_packages=(
   "google-drive"
   "keyboardcleantool"
   "appcleaner"
-  "lunar"
   "docker"
   "zoom"
   "git-credential-manager"
-  "warp"
 )
 
 declare -r brew_taps="$(brew tap)"
