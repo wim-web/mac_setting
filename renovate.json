@@ -2,9 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>wim-web/renovate-config",
-    "github>aquaproj/aqua-renovate-config:installer-script#2.3.1(setup/tool.sh)",
-    "github>aquaproj/aqua-renovate-config:installer-script#2.3.1(install.sh)",
-    "github>aquaproj/aqua-renovate-config:installer-script#2.3.1(update/aqua.sh)"
+    "github>aquaproj/aqua-renovate-config:installer-script#2.7.5(setup/tool.sh)",
+    "github>aquaproj/aqua-renovate-config:installer-script#2.7.5(install.sh)",
+    "github>aquaproj/aqua-renovate-config:installer-script#2.7.5(update/aqua.sh)"
   ],
   "customManagers": [
     {
