@@ -9,8 +9,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        ".*\\.sh"
+      "managerFilePatterns": [
+        "/.*\\.sh/"
       ],
       "matchStrings": [
         "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?VERSION=(?<currentValue>.*)\\s"
