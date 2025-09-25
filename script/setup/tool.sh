@@ -29,6 +29,9 @@ declare -a brew_packages=(
     "awscli"
     
     "bluesnooze"
+# renovate: datasource=github-releases depName=openai/codex
+# VERSION=0.36.0
+    "codex"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
 
