@@ -2,7 +2,7 @@
 
 # homebrew
 # renovate: datasource=github-releases depName=Homebrew/brew
-# HOMEBREW_VERSION=4.6.13
+# HOMEBREW_VERSION=4.6.20
 if type brew >/dev/null; then
     echo "Already installed homebrew"
 else
