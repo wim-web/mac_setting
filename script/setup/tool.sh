@@ -30,7 +30,7 @@ declare -a brew_packages=(
     
     "bluesnooze"
 # renovate: datasource=github-tags depName=openai/codex extractVersion=^rust-v(?<version>.*)$
-# VERSION=0.36.0
+# VERSION=0.58.0
     "codex"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
