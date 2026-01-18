@@ -29,9 +29,6 @@ declare -a brew_packages=(
     "awscli"
     
     "bluesnooze"
-# renovate: datasource=github-tags depName=openai/codex extractVersion=^rust-v(?<version>.*)$
-# VERSION=0.77.0
-    "codex"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
 
@@ -47,26 +44,29 @@ for package in "${brew_packages[@]}"; do
 done
 
 declare -a brew_cask_packages=(
-  "google-chrome"
-  "clipy"
-  "tableplus"
-  "fork"
-  "alfred"
-  "obsidian"
-  "slack"
-  "spectacle"
-  "iterm2"
-  "visual-studio-code"
-  "google-japanese-ime"
-  "1password"
-  "alt-tab"
-  "google-drive"
-  "keyboardcleantool"
-  "appcleaner"
-  "docker"
-  "zoom"
-  "git-credential-manager"
-  "gostty"
+    "google-chrome"
+    "clipy"
+    "tableplus"
+    "fork"
+    "alfred"
+    "obsidian"
+    "slack"
+    "spectacle"
+    "iterm2"
+    "visual-studio-code"
+    "google-japanese-ime"
+    "1password"
+    "alt-tab"
+    "google-drive"
+    "keyboardcleantool"
+    "appcleaner"
+    "docker"
+    "zoom"
+    "git-credential-manager"
+    "gostty"
+    # renovate: datasource=github-tags depName=openai/codex extractVersion=^rust-v(?<version>.*)$
+    # VERSION=0.77.0
+    "codex"
 )
 
 declare -r brew_taps="$(brew tap)"
