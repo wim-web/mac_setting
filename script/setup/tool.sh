@@ -63,6 +63,7 @@ declare -a brew_cask_packages=(
     "docker"
     "zoom"
     "git-credential-manager"
+    "gostty"
     # renovate: datasource=github-tags depName=openai/codex extractVersion=^rust-v(?<version>.*)$
     # VERSION=0.77.0
     "codex"
