@@ -17,5 +17,18 @@
       ],
       "extractVersionTemplate": "{{#if extractVersion}}{{{extractVersion}}}{{else}}^v?(?<version>.*)${{/if}}"
     }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "regex"
+      ],
+      "matchDepNames": [
+        "openai/codex"
+      ],
+      "schedule": [
+        "every day"
+      ]
+    }
   ]
 }
