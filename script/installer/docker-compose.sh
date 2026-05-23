@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # renovate: datasource=github-releases depName=docker/compose
-DOCKER_COMPOSE_VERSION=5.1.3
+DOCKER_COMPOSE_VERSION=5.1.4
 docker_compose_dir="$HOME/.docker/cli-plugins"
 docker_compose_name="docker-compose"
 
