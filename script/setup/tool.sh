@@ -13,6 +13,10 @@ else
     fish -c "fish_add_path ~/.local/share/aquaproj-aqua/bin || :"
 fi
 
+if type fish >/dev/null 2>&1; then
+    fish -c "fish_add_path ~/.local/bin || :"
+fi
+
 # brew
 declare -a brew_packages=(
 # renovate: datasource=github-tags depName=qemu/qemu
@@ -24,10 +28,6 @@ declare -a brew_packages=(
 # renovate: datasource=github-tags depName=git/git
 # VERSION=2.54.0
     "git"
-# renovate: datasource=github-tags depName=aws/aws-cli
-# VERSION=2.34.57
-    "awscli"
-    
     "bluesnooze"
 )
 declare -r installed_brew_packages="$(brew list -1 --formula)"
@@ -42,6 +42,17 @@ for package in "${brew_packages[@]}"; do
     fi
     echo ""
 done
+
+# awscli
+if type brew >/dev/null 2>&1 && brew list --versions awscli >/dev/null 2>&1; then
+    echo "> awscli install"
+    "$CURRENT_DIR/../installer/awscli.sh"
+elif aws --version >/dev/null 2>&1; then
+    echo "awscli already installed"
+else
+    echo "> awscli install"
+    "$CURRENT_DIR/../installer/awscli.sh"
+fi
 
 declare -a brew_cask_packages=(
     "google-chrome"
