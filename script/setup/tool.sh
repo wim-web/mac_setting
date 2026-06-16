@@ -80,14 +80,6 @@ declare -a brew_cask_packages=(
     "codex"
 )
 
-declare -r brew_taps="$(brew tap)"
-
-if echo "$brew_taps" | grep -qx "microsoft/git"; then
-        :
-    else
-        brew tap microsoft/git # for git-credential-manager
-fi
-
 declare -r installed_brew_cask_packages="$(brew list -1 --casks)"
 
 for package in "${brew_cask_packages[@]}"; do
