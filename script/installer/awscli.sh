@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # renovate: datasource=github-tags depName=aws/aws-cli
-AWSCLI_VERSION=2.35.11
+AWSCLI_VERSION=2.35.14
 
 pkg_path="/tmp/AWSCLIV2-${AWSCLI_VERSION}.pkg"
 choices_path="/tmp/AWSCLIV2-${AWSCLI_VERSION}-choices.xml"
