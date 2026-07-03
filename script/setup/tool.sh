@@ -26,7 +26,7 @@ declare -a brew_packages=(
 # VERSION=2.70.5
     "chezmoi"
 # renovate: datasource=github-tags depName=git/git
-# VERSION=2.54.0
+# VERSION=2.55.0
     "git"
     "bluesnooze"
 )
