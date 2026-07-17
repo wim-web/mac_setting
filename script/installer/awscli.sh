@@ -4,8 +4,10 @@ set -euo pipefail
 # renovate: datasource=github-tags depName=aws/aws-cli
 AWSCLI_VERSION=2.35.20
 
-pkg_path="/tmp/AWSCLIV2-${AWSCLI_VERSION}.pkg"
-choices_path="/tmp/AWSCLIV2-${AWSCLI_VERSION}-choices.xml"
+temp_dir="$(mktemp -d "${TMPDIR:-/tmp}/mac-setting-awscli.XXXXXX")"
+trap 'rm -rf "$temp_dir"' EXIT
+pkg_path="$temp_dir/AWSCLIV2-${AWSCLI_VERSION}.pkg"
+choices_path="$temp_dir/AWSCLIV2-${AWSCLI_VERSION}-choices.xml"
 install_root="$HOME/.local/share"
 install_dir="$install_root/aws-cli"
 bin_dir="$HOME/.local/bin"
