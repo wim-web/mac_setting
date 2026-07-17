@@ -273,6 +273,26 @@ check_codex_project_trust() {
     fi
 }
 
+resolve_codex_trust_repo() {
+    local repo_path="$1"
+    local common_dir git_status
+
+    set +e
+    common_dir="$(
+        GIT_OPTIONAL_LOCKS=0 git -C "$repo_path" \
+            rev-parse --path-format=absolute --git-common-dir 2>/dev/null
+    )"
+    git_status=$?
+    set -e
+
+    common_dir="${common_dir%/}"
+    if [[ "$git_status" -eq 0 && "${common_dir##*/}" == '.git' ]]; then
+        printf '%s\n' "${common_dir%/.git}"
+    else
+        printf '%s\n' "${repo_path%/}"
+    fi
+}
+
 check_codex() {
     local mac_setting_repo="$1"
     local codex_home codex_config automation_count automation_files find_status automation_file
@@ -314,7 +334,7 @@ check_codex() {
 }
 
 check_host() {
-    local dotfiles_repo mac_setting_repo
+    local dotfiles_repo mac_setting_repo codex_trust_repo
     dotfiles_repo="${DOCTOR_DOTFILES_REPO:-$doctor_home/program/ghq/github.com/wim-web/dotfiles}"
     mac_setting_repo="${DOCTOR_MAC_SETTING_REPO:-$repo_root}"
 
@@ -322,7 +342,8 @@ check_host() {
     check_chezmoi
     check_git_repo 'dotfiles' "$dotfiles_repo"
     check_git_repo 'mac_setting' "$mac_setting_repo"
-    check_codex "$mac_setting_repo"
+    codex_trust_repo="$(resolve_codex_trust_repo "$mac_setting_repo")"
+    check_codex "$codex_trust_repo"
 }
 
 configure_inspection_path

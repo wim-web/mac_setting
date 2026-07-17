@@ -128,7 +128,8 @@ assert_contains 'SUMMARY|failures=1|' "$unreadable_output"
 
 codex_home="$fixture_home/.codex"
 dotfiles_repo="$fixture_home/repos/dotfiles"
-mac_setting_repo="$fixture_home/repos/mac_setting"
+mac_setting_trust_repo="$fixture_home/repos/mac_setting"
+mac_setting_repo="$mac_setting_trust_repo/.worktrees/test"
 mkdir -p \
     "$codex_home/skills/running-remote-operations" \
     "$codex_home/skills/reviewing-codex-workflows" \
@@ -138,11 +139,12 @@ mkdir -p \
 printf 'guidance\n' > "$codex_home/AGENTS.md"
 printf 'automation\n' > "$codex_home/automations/example/automation.toml"
 printf '[projects."%s"]\ntrust_level = "trusted"\n' \
-    "$mac_setting_repo" > "$codex_home/config.toml"
+    "$mac_setting_trust_repo" > "$codex_home/config.toml"
 make_output_mock "$primary_bin" sw_vers 'TestOS 1.0'
 make_output_mock "$primary_bin" uname 'arm64'
 make_mock "$primary_bin" chezmoi
-printf '#!/usr/bin/env bash\n[[ "${GIT_OPTIONAL_LOCKS:-}" == "0" ]] || exit 42\n' > "$primary_bin/git"
+printf '#!/usr/bin/env bash\n[[ "${GIT_OPTIONAL_LOCKS:-}" == "0" ]] || exit 42\ncase "$*" in\n  *"rev-parse --path-format=absolute --git-common-dir"*) printf "%%s\\n" %q ;;\nesac\n' \
+    "$mac_setting_trust_repo/.git" > "$primary_bin/git"
 chmod +x "$primary_bin/git"
 
 host_output="$(
@@ -163,7 +165,7 @@ assert_contains 'OK|codex:guidance|present' "$host_output"
 assert_contains 'OK|codex:skill:running-remote-operations|present' "$host_output"
 assert_contains 'OK|codex:skill:reviewing-codex-workflows|present' "$host_output"
 assert_contains 'OK|codex:automations|count=1' "$host_output"
-assert_contains 'OK|codex:project-trust|trusted' "$host_output"
+assert_contains "OK|codex:project-trust|trusted path=$mac_setting_trust_repo" "$host_output"
 
 printf '#!/usr/bin/env bash\nexit 23\n' > "$primary_bin/find"
 chmod +x "$primary_bin/find"
