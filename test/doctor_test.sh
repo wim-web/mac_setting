@@ -137,6 +137,8 @@ mkdir -p \
     "$mac_setting_repo"
 printf 'guidance\n' > "$codex_home/AGENTS.md"
 printf 'automation\n' > "$codex_home/automations/example/automation.toml"
+printf '[projects."%s"]\ntrust_level = "trusted"\n' \
+    "$mac_setting_repo" > "$codex_home/config.toml"
 make_output_mock "$primary_bin" sw_vers 'TestOS 1.0'
 make_output_mock "$primary_bin" uname 'arm64'
 make_mock "$primary_bin" chezmoi
@@ -161,6 +163,7 @@ assert_contains 'OK|codex:guidance|present' "$host_output"
 assert_contains 'OK|codex:skill:running-remote-operations|present' "$host_output"
 assert_contains 'OK|codex:skill:reviewing-codex-workflows|present' "$host_output"
 assert_contains 'OK|codex:automations|count=1' "$host_output"
+assert_contains 'OK|codex:project-trust|trusted' "$host_output"
 
 printf '#!/usr/bin/env bash\nexit 23\n' > "$primary_bin/find"
 chmod +x "$primary_bin/find"

@@ -1,4 +1,4 @@
 [shell_environment_policy]
 inherit = "core"
-set = { PATH = "/Users/wim/.local/bin:/Users/wim/.cargo/bin:/Users/wim/.local/share/aquaproj-aqua/bin:/opt/homebrew/bin:/opt/homebrew/opt/mise/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" }
+set = { PATH = "/Users/wim/.local/bin:/Users/wim/.cargo/bin:/Users/wim/.local/share/aquaproj-aqua/bin:/opt/homebrew/bin:/opt/homebrew/opt/mise/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", AQUA_GLOBAL_CONFIG = "/Users/wim/.config/aquaproj-aqua/aqua.yaml" }
 ignore_default_excludes = false

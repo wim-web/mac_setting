@@ -19,7 +19,8 @@ doctorは全項目を最後まで検査し、`OK`、`WARN`、`FAIL` を行単位
 ログインシェルのstartup configは実行せず、呼び出し元の`PATH`を検査する。
 別の既知PATHを検査するときだけ、`DOCTOR_PATH`で明示的に渡す。
 Codexからこのリポジトリを操作するときは、`.codex/config.toml`が同じ期待PATHを
-subprocessへ設定し、defaultのsecret名除外を維持する。
+subprocessへ設定する。aqua proxyに必要なglobal configの場所だけを併せて渡し、
+defaultのsecret名除外を維持する。
 
 ## Development checks
 

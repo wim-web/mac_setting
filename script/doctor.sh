@@ -242,9 +242,42 @@ check_codex_directory() {
     fi
 }
 
+check_codex_project_trust() {
+    local config_path="$1"
+    local project_path="$2"
+    local expected_section current_section line trust_found
+
+    if [[ ! -r "$config_path" ]]; then
+        emit_fail 'codex:project-trust' "config unreadable path=$config_path"
+        return
+    fi
+
+    expected_section="[projects.\"$project_path\"]"
+    current_section=''
+    trust_found=false
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        if [[ "$line" == \[*\] ]]; then
+            current_section="$line"
+            continue
+        fi
+        if [[ "$current_section" == "$expected_section" && "$line" == 'trust_level = "trusted"' ]]; then
+            trust_found=true
+            break
+        fi
+    done < "$config_path"
+
+    if [[ "$trust_found" == true ]]; then
+        emit_ok 'codex:project-trust' "trusted path=$project_path"
+    else
+        emit_fail 'codex:project-trust' "trusted entry missing path=$project_path"
+    fi
+}
+
 check_codex() {
-    local codex_home automation_count automation_files find_status automation_file
+    local mac_setting_repo="$1"
+    local codex_home codex_config automation_count automation_files find_status automation_file
     codex_home="${DOCTOR_CODEX_HOME:-${CODEX_HOME:-$doctor_home/.codex}}"
+    codex_config="${DOCTOR_CODEX_CONFIG:-$codex_home/config.toml}"
 
     check_codex_file 'codex:guidance' "$codex_home/AGENTS.md"
     check_codex_directory \
@@ -276,6 +309,8 @@ check_codex() {
     else
         emit_warn 'codex:automations' 'count=0'
     fi
+
+    check_codex_project_trust "$codex_config" "$mac_setting_repo"
 }
 
 check_host() {
@@ -287,7 +322,7 @@ check_host() {
     check_chezmoi
     check_git_repo 'dotfiles' "$dotfiles_repo"
     check_git_repo 'mac_setting' "$mac_setting_repo"
-    check_codex
+    check_codex "$mac_setting_repo"
 }
 
 configure_inspection_path

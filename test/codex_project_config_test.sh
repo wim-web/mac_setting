@@ -17,6 +17,8 @@ grep -Fq 'inherit = "core"' "$codex_config" \
     || fail_test 'Codex subprocess environment must use core inheritance'
 grep -Fq "PATH = \"$expected_path\"" "$codex_config" \
     || fail_test 'Codex project PATH does not match the managed tool order'
+grep -Fq 'AQUA_GLOBAL_CONFIG = "/Users/wim/.config/aquaproj-aqua/aqua.yaml"' "$codex_config" \
+    || fail_test 'Codex project environment must expose the aqua global config path'
 grep -Fq 'ignore_default_excludes = false' "$codex_config" \
     || fail_test 'default secret-name exclusions must remain enabled'
 
