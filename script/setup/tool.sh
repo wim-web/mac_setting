@@ -1,7 +1,35 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CURRENT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+CURRENT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$CURRENT_DIR/../.." && pwd)"
+
+install_brew_list() {
+    local package_kind="$1"
+    local package_file="$2"
+    local package
+
+    while IFS= read -r package; do
+        [[ -z "$package" || "$package" == \#* ]] && continue
+        echo "> $package"
+        if [[ "$package_kind" == 'formula' ]]; then
+            if brew list --formula "$package" >/dev/null 2>&1; then
+                echo "already installed"
+            else
+                echo "install $package"
+                brew install "$package"
+            fi
+        else
+            if brew list --cask "$package" >/dev/null 2>&1; then
+                echo "already installed"
+            else
+                echo "install $package"
+                brew install --cask "$package"
+            fi
+        fi
+        echo ""
+    done < "$package_file"
+}
 
 # aqua
 if type aqua >/dev/null; then
@@ -18,30 +46,7 @@ if type fish >/dev/null 2>&1; then
 fi
 
 # brew
-declare -a brew_packages=(
-# renovate: datasource=github-tags depName=qemu/qemu
-# VERSION=11.0.2
-    "qemu"
-# renovate: datasource=github-releases depName=twpayne/chezmoi
-# VERSION=2.71.0
-    "chezmoi"
-# renovate: datasource=github-tags depName=git/git
-# VERSION=2.55.0
-    "git"
-    "bluesnooze"
-)
-declare -r installed_brew_packages="$(brew list -1 --formula)"
-
-for package in "${brew_packages[@]}"; do
-    echo "> $package"
-    if echo "$installed_brew_packages" | grep -qx $package; then
-        echo "already installed"
-    else
-        echo "install $package"
-        brew install "$package"
-    fi
-    echo ""
-done
+install_brew_list 'formula' "$REPO_ROOT/config/brew-formulae.txt"
 
 # awscli
 if type brew >/dev/null 2>&1 && brew list --versions awscli >/dev/null 2>&1; then
@@ -54,44 +59,7 @@ else
     "$CURRENT_DIR/../installer/awscli.sh"
 fi
 
-declare -a brew_cask_packages=(
-    "google-chrome"
-    "clipy"
-    "tableplus"
-    "fork"
-    "alfred"
-    "obsidian"
-    "slack"
-    "spectacle"
-    "iterm2"
-    "visual-studio-code"
-    "google-japanese-ime"
-    "1password"
-    "alt-tab"
-    "google-drive"
-    "keyboardcleantool"
-    "appcleaner"
-    "docker"
-    "zoom"
-    "git-credential-manager"
-    "gostty"
-    # renovate: datasource=github-tags depName=openai/codex extractVersion=^rust-v(?<version>.*)$
-    # VERSION=0.128.0
-    "codex"
-)
-
-declare -r installed_brew_cask_packages="$(brew list -1 --casks)"
-
-for package in "${brew_cask_packages[@]}"; do
-    echo "> $package"
-    if echo "$installed_brew_cask_packages" | grep -qx $package; then
-        echo "already installed"
-    else
-        echo "install $package"
-        brew install --cask "$package"
-    fi
-    echo ""
-done
+install_brew_list 'cask' "$REPO_ROOT/config/brew-casks.txt"
 
 # docker compose
-$CURRENT_DIR/../installer/docker-compose.sh
+"$CURRENT_DIR/../installer/docker-compose.sh"

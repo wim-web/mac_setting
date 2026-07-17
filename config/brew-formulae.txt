@@ -1,0 +1,10 @@
+# renovate: datasource=github-tags depName=qemu/qemu
+# VERSION=11.0.2
+# renovate: datasource=github-releases depName=twpayne/chezmoi
+# VERSION=2.71.0
+# renovate: datasource=github-tags depName=git/git
+# VERSION=2.55.0
+bluesnooze
+chezmoi
+git
+qemu

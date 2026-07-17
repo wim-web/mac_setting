@@ -1,0 +1,23 @@
+# renovate: datasource=github-tags depName=openai/codex extractVersion=^rust-v(?<version>.*)$
+# VERSION=0.128.0
+1password
+alfred
+alt-tab
+appcleaner
+clipy
+codex
+docker
+fork
+git-credential-manager
+google-chrome
+google-drive
+google-japanese-ime
+gostty
+iterm2
+keyboardcleantool
+obsidian
+slack
+spectacle
+tableplus
+visual-studio-code
+zoom
