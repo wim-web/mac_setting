@@ -40,10 +40,16 @@ make_output_mock() {
 
 run_doctor() {
     local test_path="$1"
+    run_doctor_with_manifest "$test_path" "$fixture_manifest"
+}
+
+run_doctor_with_manifest() {
+    local test_path="$1"
+    local manifest="$2"
     PATH="$test_path:/usr/bin:/bin" \
         DOCTOR_PATH="$test_path:/usr/bin:/bin" \
         DOCTOR_HOME="$fixture_home" \
-        /bin/bash "$doctor" --toolchain-file "$fixture_manifest" --paths-only
+        /bin/bash "$doctor" --toolchain-file "$manifest" --paths-only
 }
 
 make_mock "$primary_bin" alpha
@@ -76,6 +82,20 @@ make_mock "$primary_bin" alpha
 duplicate_output="$(run_doctor "$primary_bin:$secondary_bin")"
 assert_contains 'OK|tool:alpha|provider=fixture' "$duplicate_output"
 assert_contains 'WARN|tool:alpha|multiple PATH entries' "$duplicate_output"
+
+invalid_manifest="$fixture_root/toolchain-invalid.tsv"
+printf 'broken-fields\tfixture\trequired\n' > "$invalid_manifest"
+printf 'bad-requirement\tfixture\trequiredd\t%s/\n' "$primary_bin" >> "$invalid_manifest"
+printf 'empty-prefix\tfixture\trequired\t\n' >> "$invalid_manifest"
+set +e
+invalid_output="$(run_doctor_with_manifest "$primary_bin" "$invalid_manifest" 2>&1)"
+invalid_status=$?
+set -e
+[[ "$invalid_status" -eq 1 ]] || fail_test "invalid manifest status=$invalid_status"
+assert_contains 'FAIL|toolchain:line:1|expected 4 tab-separated fields actual=3' "$invalid_output"
+assert_contains 'FAIL|tool:bad-requirement|invalid requirement=requiredd' "$invalid_output"
+assert_contains 'FAIL|tool:empty-prefix|expected path prefix is empty' "$invalid_output"
+assert_contains 'SUMMARY|failures=3|' "$invalid_output"
 
 codex_home="$fixture_home/.codex"
 dotfiles_repo="$fixture_home/repos/dotfiles"

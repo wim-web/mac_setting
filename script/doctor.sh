@@ -79,6 +79,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 check_toolchain() {
+    local manifest_line line_number column_count
     local command_name provider requirement expected_prefix resolved_path path_count
 
     if [[ ! -f "$toolchain_file" ]]; then
@@ -86,8 +87,36 @@ check_toolchain() {
         return
     fi
 
-    while IFS=$'\t' read -r command_name provider requirement expected_prefix; do
-        [[ -z "$command_name" || "$command_name" == \#* ]] && continue
+    line_number=0
+    while IFS= read -r manifest_line || [[ -n "$manifest_line" ]]; do
+        line_number=$((line_number + 1))
+        [[ -z "$manifest_line" || "$manifest_line" == \#* ]] && continue
+
+        column_count="$(printf '%s\n' "$manifest_line" | awk -F '\t' '{ print NF }')"
+        if [[ "$column_count" -ne 4 ]]; then
+            emit_fail "toolchain:line:$line_number" \
+                "expected 4 tab-separated fields actual=$column_count"
+            continue
+        fi
+
+        IFS=$'\t' read -r command_name provider requirement expected_prefix <<< "$manifest_line"
+        if [[ -z "$command_name" ]]; then
+            emit_fail "toolchain:line:$line_number" 'command is empty'
+            continue
+        fi
+        if [[ -z "$provider" ]]; then
+            emit_fail "tool:$command_name" 'provider is empty'
+            continue
+        fi
+        if [[ "$requirement" != 'required' && "$requirement" != 'optional' ]]; then
+            emit_fail "tool:$command_name" "invalid requirement=$requirement"
+            continue
+        fi
+        if [[ -z "$expected_prefix" ]]; then
+            emit_fail "tool:$command_name" 'expected path prefix is empty'
+            continue
+        fi
+
         expected_prefix="${expected_prefix//\$\{HOME\}/$doctor_home}"
 
         if ! resolved_path="$(command -v "$command_name" 2>/dev/null)"; then
