@@ -88,7 +88,7 @@ assert_contains 'OK|tool:gamma|provider=fixture' "$provider_output"
 make_output_mock "$primary_bin" alpha 'alpha 1.2.3'
 duplicate_output="$(run_doctor "$primary_bin:$secondary_bin")"
 assert_contains 'OK|tool:alpha|provider=fixture' "$duplicate_output"
-assert_contains 'WARN|tool:alpha|multiple PATH entries' "$duplicate_output"
+assert_contains "WARN|tool:alpha|multiple PATH entries count=2 paths=$primary_bin/alpha,$secondary_bin/alpha" "$duplicate_output"
 
 invalid_manifest="$fixture_root/toolchain-invalid.tsv"
 printf 'broken-fields\tfixture\trequired\t%s/\n' "$primary_bin" > "$invalid_manifest"

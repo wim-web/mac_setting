@@ -61,7 +61,8 @@ done
 check_toolchain() {
     local manifest_line parsed_line line_number column_count
     local command_name provider requirement expected_prefix version_argument
-    local resolved_path path_count version_output version_status version_value
+    local resolved_path path_entries path_entry path_count path_list
+    local version_output version_status version_value
 
     if [[ ! -f "$toolchain_file" ]]; then
         emit_fail 'toolchain' "manifest missing: $toolchain_file"
@@ -150,9 +151,21 @@ check_toolchain() {
             emit_ok "version:$command_name" "value=$version_value"
         fi
 
-        path_count="$(type -a -p "$command_name" 2>/dev/null | awk '!seen[$0]++' | wc -l | tr -d ' ')"
+        path_entries="$(type -a -p "$command_name" 2>/dev/null | awk '!seen[$0]++')"
+        path_count=0
+        path_list=''
+        while IFS= read -r path_entry; do
+            [[ -z "$path_entry" ]] && continue
+            path_count=$((path_count + 1))
+            if [[ -z "$path_list" ]]; then
+                path_list="$path_entry"
+            else
+                path_list="$path_list,$path_entry"
+            fi
+        done <<< "$path_entries"
         if [[ "$path_count" -gt 1 ]]; then
-            emit_warn "tool:$command_name" "multiple PATH entries count=$path_count"
+            emit_warn "tool:$command_name" \
+                "multiple PATH entries count=$path_count paths=$path_list"
         fi
     done <&3
     exec 3<&-
