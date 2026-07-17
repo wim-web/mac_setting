@@ -7,6 +7,27 @@
 ./script/setup/tool.sh
 ```
 
+セットアップ後、ツールの管理元、PATH競合、chezmoi、Git、Codex配置を
+読み取り専用で確認する。
+
+```sh
+bash script/doctor.sh
+```
+
+doctorは全項目を最後まで検査し、`OK`、`WARN`、`FAIL` を行単位で出力する。
+必須コマンドの欠落または期待した管理元との不一致がある場合は非ゼロで終了する。
+
+## Development checks
+
+doctorのfixtureテスト、Homebrew一覧、bootstrap規則、シェル構文をまとめて確認する。
+
+```sh
+bash script/check.sh
+```
+
+主要コマンドの期待管理元は `config/toolchain.tsv`、明示的に導入するHomebrew
+パッケージは `config/brew-formulae.txt` と `config/brew-casks.txt` を正本とする。
+
 ## dotfiles
 
 https://github.com/wim-web/dotfiles by chezmoi
