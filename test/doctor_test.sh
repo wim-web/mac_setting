@@ -97,6 +97,18 @@ assert_contains 'FAIL|tool:bad-requirement|invalid requirement=requiredd' "$inva
 assert_contains 'FAIL|tool:empty-prefix|expected path prefix is empty' "$invalid_output"
 assert_contains 'SUMMARY|failures=3|' "$invalid_output"
 
+unreadable_manifest="$fixture_root/toolchain-unreadable.tsv"
+cp "$fixture_manifest" "$unreadable_manifest"
+chmod 000 "$unreadable_manifest"
+set +e
+unreadable_output="$(run_doctor_with_manifest "$primary_bin" "$unreadable_manifest" 2>&1)"
+unreadable_status=$?
+set -e
+chmod 600 "$unreadable_manifest"
+[[ "$unreadable_status" -eq 1 ]] || fail_test "unreadable manifest status=$unreadable_status"
+assert_contains 'FAIL|toolchain|manifest unreadable:' "$unreadable_output"
+assert_contains 'SUMMARY|failures=1|' "$unreadable_output"
+
 codex_home="$fixture_home/.codex"
 dotfiles_repo="$fixture_home/repos/dotfiles"
 mac_setting_repo="$fixture_home/repos/mac_setting"
@@ -132,6 +144,25 @@ assert_contains 'OK|codex:guidance|present' "$host_output"
 assert_contains 'OK|codex:skill:running-remote-operations|present' "$host_output"
 assert_contains 'OK|codex:skill:reviewing-codex-workflows|present' "$host_output"
 assert_contains 'OK|codex:automations|count=1' "$host_output"
+
+printf '#!/usr/bin/env bash\nexit 23\n' > "$primary_bin/find"
+chmod +x "$primary_bin/find"
+set +e
+find_failure_output="$(
+    PATH="$primary_bin:/usr/bin:/bin" \
+        DOCTOR_PATH="$primary_bin:/usr/bin:/bin" \
+        DOCTOR_HOME="$fixture_home" \
+        DOCTOR_CODEX_HOME="$codex_home" \
+        DOCTOR_DOTFILES_REPO="$dotfiles_repo" \
+        DOCTOR_MAC_SETTING_REPO="$mac_setting_repo" \
+        /bin/bash "$doctor" --toolchain-file "$fixture_manifest" 2>&1
+)"
+find_failure_status=$?
+set -e
+rm "$primary_bin/find"
+[[ "$find_failure_status" -eq 0 ]] || fail_test "automation scan failure status=$find_failure_status"
+assert_contains 'WARN|codex:automations|scan failed exit=23' "$find_failure_output"
+assert_contains 'SUMMARY|failures=0|' "$find_failure_output"
 
 login_shell_marker="$fixture_root/login-shell-invoked"
 printf '#!/usr/bin/env bash\nprintf touched > %q\nprintf "%%s\\n" %q\n' \

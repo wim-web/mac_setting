@@ -66,6 +66,14 @@ check_toolchain() {
         emit_fail 'toolchain' "manifest missing: $toolchain_file"
         return
     fi
+    if [[ ! -r "$toolchain_file" ]]; then
+        emit_fail 'toolchain' "manifest unreadable: $toolchain_file"
+        return
+    fi
+    if ! exec 3< "$toolchain_file"; then
+        emit_fail 'toolchain' "manifest open failed: $toolchain_file"
+        return
+    fi
 
     line_number=0
     while IFS= read -r manifest_line || [[ -n "$manifest_line" ]]; do
@@ -121,7 +129,8 @@ check_toolchain() {
         if [[ "$path_count" -gt 1 ]]; then
             emit_warn "tool:$command_name" "multiple PATH entries count=$path_count"
         fi
-    done < "$toolchain_file"
+    done <&3
+    exec 3<&-
 }
 
 check_system() {
@@ -196,7 +205,7 @@ check_codex_directory() {
 }
 
 check_codex() {
-    local codex_home automation_count
+    local codex_home automation_count automation_files find_status automation_file
     codex_home="${DOCTOR_CODEX_HOME:-${CODEX_HOME:-$doctor_home/.codex}}"
 
     check_codex_file 'codex:guidance' "$codex_home/AGENTS.md"
@@ -209,7 +218,20 @@ check_codex() {
 
     automation_count=0
     if [[ -d "$codex_home/automations" ]]; then
-        automation_count="$(find "$codex_home/automations" -mindepth 2 -maxdepth 2 -name automation.toml -type f | wc -l | tr -d ' ')"
+        set +e
+        automation_files="$(
+            find "$codex_home/automations" \
+                -mindepth 2 -maxdepth 2 -name automation.toml -type f -print 2>/dev/null
+        )"
+        find_status=$?
+        set -e
+        if [[ "$find_status" -ne 0 ]]; then
+            emit_warn 'codex:automations' "scan failed exit=$find_status"
+            return
+        fi
+        while IFS= read -r automation_file; do
+            [[ -n "$automation_file" ]] && automation_count=$((automation_count + 1))
+        done <<< "$automation_files"
     fi
     if [[ "$automation_count" -gt 0 ]]; then
         emit_ok 'codex:automations' "count=$automation_count"
