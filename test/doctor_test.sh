@@ -111,7 +111,8 @@ printf 'automation\n' > "$codex_home/automations/example/automation.toml"
 make_output_mock "$primary_bin" sw_vers 'TestOS 1.0'
 make_output_mock "$primary_bin" uname 'arm64'
 make_mock "$primary_bin" chezmoi
-make_mock "$primary_bin" git
+printf '#!/usr/bin/env bash\n[[ "${GIT_OPTIONAL_LOCKS:-}" == "0" ]] || exit 42\n' > "$primary_bin/git"
+chmod +x "$primary_bin/git"
 
 host_output="$(
     PATH="$primary_bin:/usr/bin:/bin" \
@@ -132,10 +133,14 @@ assert_contains 'OK|codex:skill:running-remote-operations|present' "$host_output
 assert_contains 'OK|codex:skill:reviewing-codex-workflows|present' "$host_output"
 assert_contains 'OK|codex:automations|count=1' "$host_output"
 
-make_output_mock "$secondary_bin" fish "$primary_bin:$secondary_bin:/usr/bin:/bin"
+login_shell_marker="$fixture_root/login-shell-invoked"
+printf '#!/usr/bin/env bash\nprintf touched > %q\nprintf "%%s\\n" %q\n' \
+    "$login_shell_marker" \
+    "$secondary_bin:$primary_bin:/usr/bin:/bin" > "$secondary_bin/fish"
+chmod +x "$secondary_bin/fish"
 set +e
 login_path_output="$(
-    PATH="$secondary_bin:$primary_bin:/usr/bin:/bin" \
+    PATH="$primary_bin:$secondary_bin:/usr/bin:/bin" \
         DOCTOR_HOME="$fixture_home" \
         DOCTOR_LOGIN_SHELL="$secondary_bin/fish" \
         DOCTOR_CODEX_HOME="$codex_home" \
@@ -145,7 +150,8 @@ login_path_output="$(
 )"
 login_path_status=$?
 set -e
-[[ "$login_path_status" -eq 0 ]] || fail_test "login PATH status=$login_path_status"
+[[ "$login_path_status" -eq 0 ]] || fail_test "process PATH status=$login_path_status"
 assert_contains 'OK|tool:alpha|provider=fixture' "$login_path_output"
+[[ ! -e "$login_shell_marker" ]] || fail_test 'doctor must not execute login shell startup code'
 
 printf 'doctor tests passed\n'

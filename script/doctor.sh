@@ -29,29 +29,9 @@ emit_fail() {
 }
 
 configure_inspection_path() {
-    local login_shell candidate_path shell_status
-
     if [[ -n "${DOCTOR_PATH:-}" ]]; then
         inspection_path="$DOCTOR_PATH"
         inspection_path_source='override'
-        return
-    fi
-
-    login_shell="${DOCTOR_LOGIN_SHELL:-${SHELL:-}}"
-    [[ -n "$login_shell" && -x "$login_shell" ]] || return
-
-    set +e
-    if [[ "$(basename "$login_shell")" == 'fish' ]]; then
-        candidate_path="$("$login_shell" -lc 'string join : $PATH' 2>/dev/null)"
-    else
-        candidate_path="$("$login_shell" -lc 'printf "%s\\n" "$PATH"' 2>/dev/null)"
-    fi
-    shell_status=$?
-    set -e
-
-    if [[ "$shell_status" -eq 0 && -n "$candidate_path" ]]; then
-        inspection_path="$candidate_path"
-        inspection_path_source='login-shell'
     fi
 }
 
@@ -183,7 +163,7 @@ check_git_repo() {
     fi
 
     set +e
-    status_output="$(git -C "$repo_path" status --porcelain 2>&1)"
+    status_output="$(GIT_OPTIONAL_LOCKS=0 git -C "$repo_path" status --porcelain 2>&1)"
     status_code=$?
     set -e
     if [[ "$status_code" -ne 0 ]]; then
