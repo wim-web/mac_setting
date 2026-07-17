@@ -15,7 +15,11 @@ grep -Fq "trap 'rm -rf \"\$tmp_dir\"' EXIT" "$base_script" || fail_test 'tempora
 grep -Fq 'command -v brew' "$base_script" || fail_test 'brew lookup must use command -v'
 grep -Fq 'command -v fish' "$base_script" || fail_test 'fish lookup must use command -v'
 grep -Fq 'sudo tee -a /etc/shells' "$base_script" || fail_test '/etc/shells must be appended, not overwritten'
+grep -Fq 'dscl . -read "/Users/$current_user" UserShell' "$base_script" \
+    || fail_test 'configured login shell must come from the account database'
 ! grep -Fq '/tmp/hackgen.zip' "$base_script" || fail_test 'shared temporary archive remains'
 ! grep -Eq 'echo[[:space:]]+\$\(which fish\)' "$base_script" || fail_test 'unquoted fish path remains'
+! grep -Fq '[[ "${SHELL:-}" != "$fish_path" ]]' "$base_script" \
+    || fail_test 'current session SHELL must not drive chsh'
 
 printf 'base setup tests passed\n'

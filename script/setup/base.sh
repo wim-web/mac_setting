@@ -24,7 +24,12 @@ fish_path="$(command -v fish)"
 if ! grep -Fxq "$fish_path" /etc/shells; then
     printf '%s\n' "$fish_path" | sudo tee -a /etc/shells >/dev/null
 fi
-if [[ "${SHELL:-}" != "$fish_path" ]]; then
+current_user="$(id -un)"
+configured_shell=''
+if shell_record="$(dscl . -read "/Users/$current_user" UserShell 2>/dev/null)"; then
+    configured_shell="${shell_record#UserShell: }"
+fi
+if [[ "$configured_shell" != "$fish_path" ]]; then
     chsh -s "$fish_path"
 fi
 fish -c "fish_add_path /opt/homebrew/bin"

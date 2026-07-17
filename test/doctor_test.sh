@@ -23,6 +23,12 @@ assert_contains() {
     [[ "$actual" == *"$expected"* ]] || fail_test "missing output: $expected"
 }
 
+assert_not_contains() {
+    local unexpected="$1"
+    local actual="$2"
+    [[ "$actual" != *"$unexpected"* ]] || fail_test "unexpected output: $unexpected"
+}
+
 make_mock() {
     local directory="$1"
     local command_name="$2"
@@ -60,6 +66,8 @@ assert_contains 'OK|tool:alpha|provider=fixture' "$success_output"
 assert_contains 'OK|version:alpha|value=alpha 1.2.3' "$success_output"
 assert_contains 'WARN|tool:beta|missing optional command' "$success_output"
 assert_contains 'OK|tool:gamma|provider=fixture' "$success_output"
+assert_not_contains 'OK|system|' "$success_output"
+assert_not_contains 'OK|codex:guidance|' "$success_output"
 
 printf '#!/usr/bin/env bash\nexit 7\n' > "$primary_bin/alpha"
 chmod +x "$primary_bin/alpha"

@@ -5,6 +5,8 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 formulae_file="$repo_root/config/brew-formulae.txt"
 casks_file="$repo_root/config/brew-casks.txt"
 tool_script="$repo_root/script/setup/tool.sh"
+fixture_root="$(mktemp -d)"
+trap 'rm -rf "$fixture_root"' EXIT
 
 fail_test() {
     printf 'FAIL: %s\n' "$1" >&2
@@ -52,5 +54,29 @@ grep -Fq 'config/brew-formulae.txt' "$tool_script"
 grep -Fq 'config/brew-casks.txt' "$tool_script"
 ! grep -Fq 'brew_packages=(' "$tool_script"
 ! grep -Fq 'brew_cask_packages=(' "$tool_script"
+grep -Fq 'if [[ "${BASH_SOURCE[0]}" == "$0" ]]' "$tool_script" \
+    || fail_test 'tool setup must be sourceable without running main'
+
+brew_log="$fixture_root/brew.log"
+installed_formulae="$fixture_root/formulae.txt"
+installed_casks="$fixture_root/casks.txt"
+printf 'already-formula\n' > "$installed_formulae"
+printf 'already-cask\n' > "$installed_casks"
+
+brew() {
+    printf '%s\n' "$*" >> "$brew_log"
+    [[ "$1" == 'list' ]]
+}
+
+source "$tool_script"
+install_brew_list 'formula' "$installed_formulae" >/dev/null
+install_brew_list 'cask' "$installed_casks" >/dev/null
+
+grep -Fxq 'list --formula already-formula' "$brew_log" \
+    || fail_test 'installed formula was not checked'
+grep -Fxq 'list --cask already-cask' "$brew_log" \
+    || fail_test 'installed cask was not checked'
+! grep -Eq '^install( |$)' "$brew_log" \
+    || fail_test 'installed package must not be reinstalled'
 
 printf 'setup list tests passed\n'
