@@ -16,7 +16,7 @@
 - Create: `test/doctor_test.sh`
 - Create: `test/fixtures/toolchain-ok.tsv`
 
-- [ ] **Step 1: fixtureとテストを書く**
+- [x] **Step 1: fixtureとテストを書く**
 
 ```text
 alpha	fixture	required	/fixture/bin/alpha
@@ -39,7 +39,7 @@ assert_contains 'FAIL|tool:alpha|missing required command' "$missing_required_ou
 assert_contains 'OK|tool:gamma|' "$missing_required_output"
 ```
 
-- [ ] **Step 2: REDを確認する**
+- [x] **Step 2: REDを確認する**
 
 Run: `bash test/doctor_test.sh`
 
@@ -52,7 +52,7 @@ Expected: `script/doctor.sh` が存在せず非ゼロ終了。
 - Create: `script/doctor.sh`
 - Modify: `test/doctor_test.sh`
 
-- [ ] **Step 1: 実機の期待管理元をmanifestへ記録する**
+- [x] **Step 1: 実機の期待管理元をmanifestへ記録する**
 
 ```text
 # command	provider	requirement	expected-path-prefix
@@ -74,27 +74,27 @@ cargo	rustup	required	${HOME}/.cargo/bin/
 docker	docker-desktop	required	/usr/local/bin/
 ```
 
-- [ ] **Step 2: 全件継続するdoctorを実装する**
+- [x] **Step 2: 全件継続するdoctorを実装する**
 
 `script/doctor.sh` は `--toolchain-file` と `--paths-only` を受け取り、manifestをタブ区切りで読み込む。`${HOME}` だけを `DOCTOR_HOME` へ安全に展開し、`command -v` の実体が期待prefix外ならFAIL、optional欠落と重複PATHはWARN、required欠落はFAILとする。検査途中で終了せず、FAIL件数が1以上なら最後にexit 1する。
 
-- [ ] **Step 3: GREENを確認する**
+- [x] **Step 3: GREENを確認する**
 
 Run: `bash test/doctor_test.sh`
 
 Expected: 全ケースPASS。
 
-- [ ] **Step 4: ホスト検査を追加するテストを先に書く**
+- [x] **Step 4: ホスト検査を追加するテストを先に書く**
 
 テストで `--paths-only` 時にhost検査が出ないこと、通常時に `system`、`chezmoi`、`git:dotfiles`、`git:mac_setting`、`codex:guidance`、2つのskill、Automationの各行が出ることを検証する。
 
-- [ ] **Step 5: ホスト検査を実装して全テストを通す**
+- [x] **Step 5: ホスト検査を実装して全テストを通す**
 
 Run: `bash test/doctor_test.sh`
 
 Expected: 全ケースPASS。
 
-- [ ] **Step 6: コミットする**
+- [x] **Step 6: コミットする**
 
 ```bash
 git add config/toolchain.tsv script/doctor.sh test/doctor_test.sh test/fixtures/toolchain-ok.tsv
@@ -109,17 +109,17 @@ git commit -m "feat: add read-only environment doctor"
 - Create: `test/setup_lists_test.sh`
 - Modify: `script/setup/tool.sh`
 
-- [ ] **Step 1: 現在の全パッケージを期待する失敗テストを書く**
+- [x] **Step 1: 現在の全パッケージを期待する失敗テストを書く**
 
 `test/setup_lists_test.sh` は重複・空白・未ソートを拒否し、既存4 formulaと既存21 caskが一度ずつ存在することを検証する。
 
-- [ ] **Step 2: REDを確認する**
+- [x] **Step 2: REDを確認する**
 
 Run: `bash test/setup_lists_test.sh`
 
 Expected: 2つの一覧ファイルが存在せずFAIL。
 
-- [ ] **Step 3: 一覧ファイルを追加してtool.shから読む**
+- [x] **Step 3: 一覧ファイルを追加してtool.shから読む**
 
 ```bash
 install_brew_list() {
@@ -139,13 +139,13 @@ install_brew_list() {
 
 実装時はformulaとcaskで引数を明示分岐し、文字列置換で空引数を生成しない。
 
-- [ ] **Step 4: GREENと構文を確認する**
+- [x] **Step 4: GREENと構文を確認する**
 
 Run: `bash test/setup_lists_test.sh && bash -n script/setup/tool.sh`
 
 Expected: 成功。
 
-- [ ] **Step 5: コミットする**
+- [x] **Step 5: コミットする**
 
 ```bash
 git add config/brew-formulae.txt config/brew-casks.txt test/setup_lists_test.sh script/setup/tool.sh
@@ -158,7 +158,7 @@ git commit -m "refactor: centralize homebrew package lists"
 - Create: `test/base_setup_test.sh`
 - Modify: `script/setup/base.sh`
 
-- [ ] **Step 1: 静的な失敗テストを書く**
+- [x] **Step 1: 静的な失敗テストを書く**
 
 ```bash
 grep -Fq 'set -euo pipefail' script/setup/base.sh
@@ -168,23 +168,23 @@ grep -Fq "trap 'rm -rf" script/setup/base.sh
 ! grep -Eq 'echo \$\(which fish\)' script/setup/base.sh
 ```
 
-- [ ] **Step 2: REDを確認する**
+- [x] **Step 2: REDを確認する**
 
 Run: `bash test/base_setup_test.sh`
 
 Expected: strict modeと安全な一時ディレクトリがなくFAIL。
 
-- [ ] **Step 3: 最小修正する**
+- [x] **Step 3: 最小修正する**
 
 `base.sh` にzsh strict modeを追加し、`command -v` と引用を使う。フォント取得は `mktemp -d` で作ったディレクトリへ保存し、trapで削除する。
 
-- [ ] **Step 4: GREENと構文を確認する**
+- [x] **Step 4: GREENと構文を確認する**
 
 Run: `bash test/base_setup_test.sh && zsh -n script/setup/base.sh`
 
 Expected: 成功。
 
-- [ ] **Step 5: コミットする**
+- [x] **Step 5: コミットする**
 
 ```bash
 git add test/base_setup_test.sh script/setup/base.sh
@@ -198,7 +198,7 @@ git commit -m "fix: harden mac bootstrap script"
 - Create: `.github/workflows/check.yml`
 - Modify: `README.md`
 
-- [ ] **Step 1: check.shを追加する**
+- [x] **Step 1: check.shを追加する**
 
 ```bash
 #!/usr/bin/env bash
@@ -212,13 +212,13 @@ bash -n script/setup/tool.sh script/doctor.sh script/check.sh
 zsh -n script/setup/base.sh
 ```
 
-- [ ] **Step 2: ローカルで成功を確認する**
+- [x] **Step 2: ローカルで成功を確認する**
 
 Run: `bash script/check.sh`
 
 Expected: 全テストと構文検査が成功。
 
-- [ ] **Step 3: SHA固定workflowを追加する**
+- [x] **Step 3: SHA固定workflowを追加する**
 
 ```yaml
 name: check
@@ -245,19 +245,19 @@ jobs:
 
 このSHAが `actions/checkout` v7.0.0 を指すことは `gh release view` と既存workflowで確認済み。更新時もタグではなく実SHAを使う。
 
-- [ ] **Step 4: workflowとREADMEを検証する**
+- [x] **Step 4: workflowとREADMEを検証する**
 
 Run: `rg 'uses: .+@[0-9a-f]{40}' .github/workflows/check.yml && bash script/check.sh`
 
 Expected: SHA固定行が一致し、全検査成功。
 
-- [ ] **Step 5: 実機doctorを実行する**
+- [x] **Step 5: 実機doctorを実行する**
 
 Run: `bash script/doctor.sh`
 
 Expected: 全検査を最後まで出力。既知の競合はWARN、期待管理元の不一致がなければFAILなし。
 
-- [ ] **Step 6: READMEを更新しコミットする**
+- [x] **Step 6: READMEを更新しコミットする**
 
 READMEへセットアップ後の `bash script/doctor.sh` と開発時の `bash script/check.sh` を追加する。
 
@@ -271,13 +271,13 @@ git commit -m "ci: verify mac environment scripts"
 **Files:**
 - Verify only
 
-- [ ] **Step 1: 全ローカル検証を再実行する**
+- [x] **Step 1: 全ローカル検証を再実行する**
 
 Run: `bash script/check.sh && bash script/doctor.sh`
 
 Expected: checkは成功し、doctorは全項目を集約する。
 
-- [ ] **Step 2: 差分品質を確認する**
+- [x] **Step 2: 差分品質を確認する**
 
 ```bash
 git diff --check HEAD~5..HEAD
