@@ -59,8 +59,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 check_toolchain() {
-    local manifest_line line_number column_count
-    local command_name provider requirement expected_prefix resolved_path path_count
+    local manifest_line parsed_line line_number column_count
+    local command_name provider requirement expected_prefix version_argument
+    local resolved_path path_count version_output version_status version_value
 
     if [[ ! -f "$toolchain_file" ]]; then
         emit_fail 'toolchain' "manifest missing: $toolchain_file"
@@ -81,13 +82,16 @@ check_toolchain() {
         [[ -z "$manifest_line" || "$manifest_line" == \#* ]] && continue
 
         column_count="$(printf '%s\n' "$manifest_line" | awk -F '\t' '{ print NF }')"
-        if [[ "$column_count" -ne 4 ]]; then
+        if [[ "$column_count" -ne 5 ]]; then
             emit_fail "toolchain:line:$line_number" \
-                "expected 4 tab-separated fields actual=$column_count"
+                "expected 5 tab-separated fields actual=$column_count"
             continue
         fi
 
-        IFS=$'\t' read -r command_name provider requirement expected_prefix <<< "$manifest_line"
+        parsed_line="${manifest_line//$'\t'/$'\034'}"
+        IFS=$'\034' read -r \
+            command_name provider requirement expected_prefix version_argument \
+            <<< "$parsed_line"
         if [[ -z "$command_name" ]]; then
             emit_fail "toolchain:line:$line_number" 'command is empty'
             continue
@@ -102,6 +106,11 @@ check_toolchain() {
         fi
         if [[ -z "$expected_prefix" ]]; then
             emit_fail "tool:$command_name" 'expected path prefix is empty'
+            continue
+        fi
+        if [[ "$version_argument" != '--version' && "$version_argument" != 'version' ]]; then
+            emit_fail "tool:$command_name" \
+                "invalid version argument=$version_argument"
             continue
         fi
 
@@ -124,6 +133,22 @@ check_toolchain() {
                 emit_fail "tool:$command_name" "provider mismatch expected=$provider prefix=$expected_prefix actual=$resolved_path"
                 ;;
         esac
+
+        set +e
+        version_output="$(LC_ALL=C "$resolved_path" "$version_argument" 2>&1)"
+        version_status=$?
+        set -e
+        if [[ "$version_status" -ne 0 ]]; then
+            emit_warn "version:$command_name" "command failed exit=$version_status"
+        elif [[ -z "$version_output" ]]; then
+            emit_warn "version:$command_name" 'command returned empty output'
+        else
+            version_value="${version_output%%$'\n'*}"
+            version_value="${version_value//$'\r'/}"
+            version_value="${version_value//|/:}"
+            version_value="${version_value:0:160}"
+            emit_ok "version:$command_name" "value=$version_value"
+        fi
 
         path_count="$(type -a -p "$command_name" 2>/dev/null | awk '!seen[$0]++' | wc -l | tr -d ' ')"
         if [[ "$path_count" -gt 1 ]]; then

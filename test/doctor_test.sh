@@ -52,13 +52,20 @@ run_doctor_with_manifest() {
         /bin/bash "$doctor" --toolchain-file "$manifest" --paths-only
 }
 
-make_mock "$primary_bin" alpha
-make_mock "$primary_bin" gamma
+make_output_mock "$primary_bin" alpha 'alpha 1.2.3'
+make_output_mock "$primary_bin" gamma 'gamma 4.5.6'
 
 success_output="$(run_doctor "$primary_bin")"
 assert_contains 'OK|tool:alpha|provider=fixture' "$success_output"
+assert_contains 'OK|version:alpha|value=alpha 1.2.3' "$success_output"
 assert_contains 'WARN|tool:beta|missing optional command' "$success_output"
 assert_contains 'OK|tool:gamma|provider=fixture' "$success_output"
+
+printf '#!/usr/bin/env bash\nexit 7\n' > "$primary_bin/alpha"
+chmod +x "$primary_bin/alpha"
+version_failure_output="$(run_doctor "$primary_bin")"
+assert_contains 'WARN|version:alpha|command failed exit=7' "$version_failure_output"
+make_output_mock "$primary_bin" alpha 'alpha 1.2.3'
 
 rm "$primary_bin/alpha"
 set +e
@@ -78,24 +85,26 @@ set -e
 assert_contains 'FAIL|tool:alpha|provider mismatch' "$provider_output"
 assert_contains 'OK|tool:gamma|provider=fixture' "$provider_output"
 
-make_mock "$primary_bin" alpha
+make_output_mock "$primary_bin" alpha 'alpha 1.2.3'
 duplicate_output="$(run_doctor "$primary_bin:$secondary_bin")"
 assert_contains 'OK|tool:alpha|provider=fixture' "$duplicate_output"
 assert_contains 'WARN|tool:alpha|multiple PATH entries' "$duplicate_output"
 
 invalid_manifest="$fixture_root/toolchain-invalid.tsv"
-printf 'broken-fields\tfixture\trequired\n' > "$invalid_manifest"
-printf 'bad-requirement\tfixture\trequiredd\t%s/\n' "$primary_bin" >> "$invalid_manifest"
-printf 'empty-prefix\tfixture\trequired\t\n' >> "$invalid_manifest"
+printf 'broken-fields\tfixture\trequired\t%s/\n' "$primary_bin" > "$invalid_manifest"
+printf 'bad-requirement\tfixture\trequiredd\t%s/\t--version\n' "$primary_bin" >> "$invalid_manifest"
+printf 'empty-prefix\tfixture\trequired\t\t--version\n' >> "$invalid_manifest"
+printf 'bad-version\tfixture\trequired\t%s/\t--bad\n' "$primary_bin" >> "$invalid_manifest"
 set +e
 invalid_output="$(run_doctor_with_manifest "$primary_bin" "$invalid_manifest" 2>&1)"
 invalid_status=$?
 set -e
 [[ "$invalid_status" -eq 1 ]] || fail_test "invalid manifest status=$invalid_status"
-assert_contains 'FAIL|toolchain:line:1|expected 4 tab-separated fields actual=3' "$invalid_output"
+assert_contains 'FAIL|toolchain:line:1|expected 5 tab-separated fields actual=4' "$invalid_output"
 assert_contains 'FAIL|tool:bad-requirement|invalid requirement=requiredd' "$invalid_output"
 assert_contains 'FAIL|tool:empty-prefix|expected path prefix is empty' "$invalid_output"
-assert_contains 'SUMMARY|failures=3|' "$invalid_output"
+assert_contains 'FAIL|tool:bad-version|invalid version argument=--bad' "$invalid_output"
+assert_contains 'SUMMARY|failures=4|' "$invalid_output"
 
 unreadable_manifest="$fixture_root/toolchain-unreadable.tsv"
 cp "$fixture_manifest" "$unreadable_manifest"
