@@ -21,6 +21,8 @@ doctorは全項目を最後まで検査し、`OK`、`WARN`、`FAIL` を行単位
 Codexからこのリポジトリを操作するときは、`.codex/config.toml`が同じ期待PATHを
 subprocessへ設定する。aqua proxyに必要なglobal configの場所だけを併せて渡し、
 defaultのsecret名除外を維持する。
+このproject configを有効にするには、Codexでmain checkout自体をtrustedにする。
+doctorの`codex:project-trust`はworktreeでもGit common rootを使ってこの前提を確認する。
 
 ## Development checks
 
