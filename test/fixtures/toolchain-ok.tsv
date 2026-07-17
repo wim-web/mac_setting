@@ -1,0 +1,4 @@
+# command	provider	requirement	expected-path-prefix
+alpha	fixture	required	${HOME}/bin/
+beta	fixture	optional	${HOME}/bin/
+gamma	fixture	required	${HOME}/bin/
