@@ -8,6 +8,7 @@ bash test/doctor_test.sh
 bash test/setup_lists_test.sh
 bash test/base_setup_test.sh
 bash test/awscli_installer_test.sh
+bash test/codex_project_config_test.sh
 bash test/check_entrypoint_test.sh
 
 while IFS= read -r script_path; do

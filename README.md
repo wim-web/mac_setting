@@ -18,6 +18,8 @@ doctorは全項目を最後まで検査し、`OK`、`WARN`、`FAIL` を行単位
 必須コマンドの欠落または期待した管理元との不一致がある場合は非ゼロで終了する。
 ログインシェルのstartup configは実行せず、呼び出し元の`PATH`を検査する。
 別の既知PATHを検査するときだけ、`DOCTOR_PATH`で明示的に渡す。
+Codexからこのリポジトリを操作するときは、`.codex/config.toml`が同じ期待PATHを
+subprocessへ設定し、defaultのsecret名除外を維持する。
 
 ## Development checks
 
