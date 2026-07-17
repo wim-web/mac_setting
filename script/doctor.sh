@@ -5,6 +5,8 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 toolchain_file="$repo_root/config/toolchain.tsv"
 paths_only=false
 doctor_home="${DOCTOR_HOME:-$HOME}"
+inspection_path="$PATH"
+inspection_path_source='process'
 failures=0
 warnings=0
 
@@ -24,6 +26,33 @@ emit_warn() {
 emit_fail() {
     failures=$((failures + 1))
     printf 'FAIL|%s|%s\n' "$1" "$2"
+}
+
+configure_inspection_path() {
+    local login_shell candidate_path shell_status
+
+    if [[ -n "${DOCTOR_PATH:-}" ]]; then
+        inspection_path="$DOCTOR_PATH"
+        inspection_path_source='override'
+        return
+    fi
+
+    login_shell="${DOCTOR_LOGIN_SHELL:-${SHELL:-}}"
+    [[ -n "$login_shell" && -x "$login_shell" ]] || return
+
+    set +e
+    if [[ "$(basename "$login_shell")" == 'fish' ]]; then
+        candidate_path="$("$login_shell" -lc 'string join : $PATH' 2>/dev/null)"
+    else
+        candidate_path="$("$login_shell" -lc 'printf "%s\\n" "$PATH"' 2>/dev/null)"
+    fi
+    shell_status=$?
+    set -e
+
+    if [[ "$shell_status" -eq 0 && -n "$candidate_path" ]]; then
+        inspection_path="$candidate_path"
+        inspection_path_source='login-shell'
+    fi
 }
 
 while [[ $# -gt 0 ]]; do
@@ -91,7 +120,7 @@ check_system() {
     os_version="$(sw_vers -productVersion 2>/dev/null || printf 'unknown')"
     architecture="$(uname -m 2>/dev/null || printf 'unknown')"
     login_shell="${DOCTOR_LOGIN_SHELL:-${SHELL:-unknown}}"
-    emit_ok 'system' "os=$os_version arch=$architecture shell=$login_shell"
+    emit_ok 'system' "os=$os_version arch=$architecture shell=$login_shell path_source=$inspection_path_source"
 }
 
 check_chezmoi() {
@@ -191,6 +220,9 @@ check_host() {
     check_git_repo 'mac_setting' "$mac_setting_repo"
     check_codex
 }
+
+configure_inspection_path
+export PATH="$inspection_path"
 
 check_toolchain
 

@@ -41,6 +41,7 @@ make_output_mock() {
 run_doctor() {
     local test_path="$1"
     PATH="$test_path:/usr/bin:/bin" \
+        DOCTOR_PATH="$test_path:/usr/bin:/bin" \
         DOCTOR_HOME="$fixture_home" \
         /bin/bash "$doctor" --toolchain-file "$fixture_manifest" --paths-only
 }
@@ -94,6 +95,7 @@ make_mock "$primary_bin" git
 
 host_output="$(
     PATH="$primary_bin:/usr/bin:/bin" \
+        DOCTOR_PATH="$primary_bin:/usr/bin:/bin" \
         DOCTOR_HOME="$fixture_home" \
         DOCTOR_LOGIN_SHELL='/opt/homebrew/bin/fish' \
         DOCTOR_CODEX_HOME="$codex_home" \
@@ -109,5 +111,21 @@ assert_contains 'OK|codex:guidance|present' "$host_output"
 assert_contains 'OK|codex:skill:running-remote-operations|present' "$host_output"
 assert_contains 'OK|codex:skill:reviewing-codex-workflows|present' "$host_output"
 assert_contains 'OK|codex:automations|count=1' "$host_output"
+
+make_output_mock "$secondary_bin" fish "$primary_bin:$secondary_bin:/usr/bin:/bin"
+set +e
+login_path_output="$(
+    PATH="$secondary_bin:$primary_bin:/usr/bin:/bin" \
+        DOCTOR_HOME="$fixture_home" \
+        DOCTOR_LOGIN_SHELL="$secondary_bin/fish" \
+        DOCTOR_CODEX_HOME="$codex_home" \
+        DOCTOR_DOTFILES_REPO="$dotfiles_repo" \
+        DOCTOR_MAC_SETTING_REPO="$mac_setting_repo" \
+        /bin/bash "$doctor" --toolchain-file "$fixture_manifest" 2>&1
+)"
+login_path_status=$?
+set -e
+[[ "$login_path_status" -eq 0 ]] || fail_test "login PATH status=$login_path_status"
+assert_contains 'OK|tool:alpha|provider=fixture' "$login_path_output"
 
 printf 'doctor tests passed\n'
