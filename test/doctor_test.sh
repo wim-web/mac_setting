@@ -184,6 +184,7 @@ set -e
 rm "$primary_bin/find"
 [[ "$find_failure_status" -eq 0 ]] || fail_test "automation scan failure status=$find_failure_status"
 assert_contains 'WARN|codex:automations|scan failed exit=23' "$find_failure_output"
+assert_contains "OK|codex:project-trust|trusted path=$mac_setting_trust_repo" "$find_failure_output"
 assert_contains 'SUMMARY|failures=0|' "$find_failure_output"
 
 login_shell_marker="$fixture_root/login-shell-invoked"

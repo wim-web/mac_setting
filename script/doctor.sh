@@ -318,14 +318,16 @@ check_codex() {
         set -e
         if [[ "$find_status" -ne 0 ]]; then
             emit_warn 'codex:automations' "scan failed exit=$find_status"
-            return
+        else
+            while IFS= read -r automation_file; do
+                [[ -n "$automation_file" ]] && automation_count=$((automation_count + 1))
+            done <<< "$automation_files"
+            if [[ "$automation_count" -gt 0 ]]; then
+                emit_ok 'codex:automations' "count=$automation_count"
+            else
+                emit_warn 'codex:automations' 'count=0'
+            fi
         fi
-        while IFS= read -r automation_file; do
-            [[ -n "$automation_file" ]] && automation_count=$((automation_count + 1))
-        done <<< "$automation_files"
-    fi
-    if [[ "$automation_count" -gt 0 ]]; then
-        emit_ok 'codex:automations' "count=$automation_count"
     else
         emit_warn 'codex:automations' 'count=0'
     fi
