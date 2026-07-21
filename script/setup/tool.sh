@@ -37,7 +37,7 @@ main() {
         echo "aqua already installed"
     else
         echo "> aqua install"
-        curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v4.0.5/aqua-installer | bash -s -- -v v2.60.1
+        curl -sSfL https://raw.githubusercontent.com/aquaproj/aqua-installer/v4.0.5/aqua-installer | bash -s -- -v v2.62.1
         fish -c "set -Ux AQUA_GLOBAL_CONFIG ~/.config/aquaproj-aqua/aqua.yaml"
         fish -c "fish_add_path ~/.local/share/aquaproj-aqua/bin || :"
     fi
