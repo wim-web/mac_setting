@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # renovate: datasource=github-tags depName=aws/aws-cli
-AWSCLI_VERSION=2.36.5
+AWSCLI_VERSION=2.36.7
 
 temp_dir="$(mktemp -d "${TMPDIR:-/tmp}/mac-setting-awscli.XXXXXX")"
 trap 'rm -rf "$temp_dir"' EXIT
