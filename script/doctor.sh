@@ -62,7 +62,8 @@ check_toolchain() {
     local manifest_line parsed_line line_number column_count
     local command_name provider requirement expected_prefix version_argument
     local resolved_path path_entries path_entry path_count path_list
-    local version_output version_status version_value
+    local version_output version_stderr version_stderr_file version_status
+    local version_value stderr_value
 
     if [[ ! -f "$toolchain_file" ]]; then
         emit_fail 'toolchain' "manifest missing: $toolchain_file"
@@ -135,10 +136,15 @@ check_toolchain() {
                 ;;
         esac
 
+        version_stderr_file="$(mktemp "${TMPDIR:-/tmp}/doctor-version-stderr.XXXXXX")"
         set +e
-        version_output="$(LC_ALL=C "$resolved_path" "$version_argument" 2>&1)"
+        version_output="$(
+            LC_ALL=C "$resolved_path" "$version_argument" 2>"$version_stderr_file"
+        )"
         version_status=$?
         set -e
+        version_stderr="$(< "$version_stderr_file")"
+        rm -f "$version_stderr_file"
         if [[ "$version_status" -ne 0 ]]; then
             emit_warn "version:$command_name" "command failed exit=$version_status"
         elif [[ -z "$version_output" ]]; then
@@ -149,6 +155,13 @@ check_toolchain() {
             version_value="${version_value//|/:}"
             version_value="${version_value:0:160}"
             emit_ok "version:$command_name" "value=$version_value"
+        fi
+        if [[ "$version_status" -eq 0 && -n "$version_stderr" ]]; then
+            stderr_value="${version_stderr%%$'\n'*}"
+            stderr_value="${stderr_value//$'\r'/}"
+            stderr_value="${stderr_value//|/:}"
+            stderr_value="${stderr_value:0:160}"
+            emit_warn "version:$command_name:stderr" "value=$stderr_value"
         fi
 
         path_entries="$(type -a -p "$command_name" 2>/dev/null | awk '!seen[$0]++')"

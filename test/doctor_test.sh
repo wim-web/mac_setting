@@ -44,6 +44,16 @@ make_output_mock() {
     chmod +x "$directory/$command_name"
 }
 
+make_split_output_mock() {
+    local directory="$1"
+    local command_name="$2"
+    local stdout_output="$3"
+    local stderr_output="$4"
+    printf '#!/usr/bin/env bash\nprintf "%%s\\n" %q\nprintf "%%s\\n" %q >&2\n' \
+        "$stdout_output" "$stderr_output" > "$directory/$command_name"
+    chmod +x "$directory/$command_name"
+}
+
 run_doctor() {
     local test_path="$1"
     run_doctor_with_manifest "$test_path" "$fixture_manifest"
@@ -68,6 +78,11 @@ assert_contains 'WARN|tool:beta|missing optional command' "$success_output"
 assert_contains 'OK|tool:gamma|provider=fixture' "$success_output"
 assert_not_contains 'OK|system|' "$success_output"
 assert_not_contains 'OK|codex:guidance|' "$success_output"
+
+make_split_output_mock "$primary_bin" alpha 'alpha 1.2.3' 'cache warning'
+split_output="$(run_doctor "$primary_bin")"
+assert_contains 'OK|version:alpha|value=alpha 1.2.3' "$split_output"
+assert_contains 'WARN|version:alpha:stderr|value=cache warning' "$split_output"
 
 printf '#!/usr/bin/env bash\nexit 7\n' > "$primary_bin/alpha"
 chmod +x "$primary_bin/alpha"
