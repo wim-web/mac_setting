@@ -60,10 +60,13 @@ description: このリポジトリの Renovate PR を調査し、repo固有ル�
   - `script/update/brew.sh`
   - `script/update/docker-compose.sh`
   - `renovate.json`
-- 変更内容が Renovate 管理コメントに紐づく version literal の更新だけ。
+  - `.github/workflows/*.yml`
+  - `.github/workflows/*.yaml`
+- shell script / `renovate.json` の変更は、Renovate 管理コメントに紐づく version literal の更新だけ。
+- GitHub Actions workflow の変更は、`uses: owner/repo@40桁SHA # tag` の SHA と右側 tag comment の更新だけ。workflow の trigger、permissions、job、step logic、secret、script command を変更する PR は自動マージしない。
 - update type が patch または minor。
-- 対象 dependency が、この repo の shell script または `renovate.json` にある Renovate 管理コメントから特定できる local setup tool の更新である。
-- upstream release notes / changelog / migration guide を確認し、breaking change、設定変更、runtime 要件変更、インストール方法変更、macOS arm64 配布物の廃止がないと判断できる。`aws/aws-cli` の patch/minor update は、`AWSCLI_VERSION` の version literal だけで install script logic を変えない場合、公式 changelog に明示的な breaking/migration がない限りマージしてよい。
+- 対象 dependency が、この repo の shell script、`renovate.json`、または GitHub Actions workflow にある Renovate 管理コメント / SHA pin から特定できる local setup tool / GitHub Action の更新である。
+- upstream release notes / changelog / migration guide を確認し、breaking change、設定変更、runtime 要件変更、インストール方法変更、macOS arm64 配布物の廃止がないと判断できる。`aws/aws-cli` の patch/minor update は、`AWSCLI_VERSION` の version literal だけで install script logic を変えない場合、公式 changelog に明示的な breaking/migration がない限りマージしてよい。`Homebrew/brew` の patch/minor update は、`HOMEBREW_VERSION` の version literal だけを変更し、公式 release notes に明示的な breaking/migration/manual action がない場合はマージしてよい。install/cask/tap/vulnerability scan などの一般的な内部改善や挙動修正の記載だけでは blocker にしない。GitHub Actions の patch/minor update は、workflow 内の SHA と tag comment だけの更新で、公式 release notes に明示的な breaking/runtime requirement/manual action がない場合はマージしてよい。
 
 ## マージしてはいけないもの
 
@@ -72,13 +75,13 @@ description: このリポジトリの Renovate PR を調査し、repo固有ル�
 - PR author が `app/renovate` または `renovate[bot]` 以外。
 - base branch が `main` 以外。
 - major update。
-- CLI tool、package manager、installer、Docker CLI plugin の minor update で、upstream release notes / migration guide から CLI 挙動や互換性の影響を判断できないもの。ただし `aws/aws-cli` の patch/minor update は、`script/installer/awscli.sh` の `AWSCLI_VERSION` だけを変更し、公式 package URL 形式や install script logic を変えない場合はこの禁止条件だけでは止めない。
-- changed files に shell script 以外の source code、iTerm2 plist、migration、DB、infra、deploy 設定が含まれるもの。
+- CLI tool、package manager、installer、Docker CLI plugin の minor update で、upstream release notes / migration guide から CLI 挙動や互換性の影響を判断できないもの。ただし `aws/aws-cli` の patch/minor update は、`script/installer/awscli.sh` の `AWSCLI_VERSION` だけを変更し、公式 package URL 形式や install script logic を変えない場合はこの禁止条件だけでは止めない。`Homebrew/brew` の patch/minor update は、`HOMEBREW_VERSION` だけを変更し、公式 release notes に明示的な breaking/migration/manual action がない場合はこの禁止条件だけでは止めない。
+- changed files に shell script、`.github/workflows/*.yml`、`.github/workflows/*.yaml` 以外の source code、iTerm2 plist、migration、DB、infra、deploy 設定が含まれるもの。workflow ファイルは GitHub Actions の SHA と tag comment だけの patch/minor 更新に限って許可する。
 - `renovate.json` の `customManagers`、`packageRules`、schedule、automerge 設定を変更するもの。ただし既存 `extends` の version pin 更新だけで、公式 changelog を確認できる場合はマージしてよい。
 - Renovate 管理コメントや version literal 以外の script logic を変更するもの。
 - upstream changelog / release notes / migration guide を確認できず、影響範囲を判断できないもの。
-- breaking changes、deprecated API、設定変更、peer dependency 変更、runtime 要件変更、インストール方法変更の可能性が残るもの。
-- macOS arm64 の配布物、Homebrew formula/cask、または aqua installer の提供方法に互換性リスクがあるもの。
+- breaking changes、deprecated API、設定変更、peer dependency 変更、runtime 要件変更、インストール方法変更の可能性が残るもの。GitHub Actions / Homebrew の patch/minor release notes に一般的な依存更新、内部改善、警告追加、install/cask/tap/vulnerability scan 周辺の通常改善が含まれるだけでは blocker にしない。
+- macOS arm64 の配布物、Homebrew formula/cask、または aqua installer の提供方法に互換性リスクがあるもの。Homebrew/brew 本体の `HOMEBREW_VERSION` literal だけの patch/minor 更新は、明示的な breaking/migration/manual action がない限りこの条件だけでは止めない。
 - failed / pending / missing check があるもの。ただしこの repo で `statusCheckRollup` が空の場合は missing check とは扱わない。
 - merge conflict があるもの。
 - requested changes や未解決の人間 review comment があるもの。
