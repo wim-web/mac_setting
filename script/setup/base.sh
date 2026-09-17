@@ -3,7 +3,7 @@ set -euo pipefail
 
 # homebrew
 # renovate: datasource=github-releases depName=Homebrew/brew
-# HOMEBREW_VERSION=6.0.22
+# HOMEBREW_VERSION=7.0.4
 if command -v brew >/dev/null 2>&1; then
     echo "Already installed homebrew"
 else
