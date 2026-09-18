@@ -1,0 +1,7 @@
+# Allow only the mac_setting AWS CLI post-merge updater outside the sandbox.
+prefix_rule(
+  pattern = ["./script/update/awscli.sh"],
+  decision = "allow",
+  justification = "Allow the mac_setting AWS CLI updater to invoke macOS Installer.",
+  match = ["./script/update/awscli.sh"],
+)
